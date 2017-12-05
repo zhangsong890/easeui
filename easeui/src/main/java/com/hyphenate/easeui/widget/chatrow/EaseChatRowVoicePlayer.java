@@ -91,7 +91,7 @@ public class EaseChatRowVoicePlayer {
          * This listener is to stop the voice play animation currently, considered the following 3 conditions:
          *
          * 1.A new voice item is clicked to play, to stop the previous playing voice item animation.
-         * 2.The voice is play complete, to stop it's voice play animation.
+         * 2.The voice is play finishLoading, to stop it's voice play animation.
          * 3.Press the voice record button will stop the voice play and must stop voice play animation.
          *
          */

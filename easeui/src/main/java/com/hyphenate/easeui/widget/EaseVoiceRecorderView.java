@@ -144,7 +144,7 @@ public class EaseVoiceRecorderView extends RelativeLayout {
 
     public interface EaseVoiceRecorderCallback {
         /**
-         * on voice record complete
+         * on voice record finishLoading
          * 
          * @param voiceFilePath
          *            录音完毕后的文件路径

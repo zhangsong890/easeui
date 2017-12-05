@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/header_content"
+        android:layout_width="fill_parent"
+        android:layout_height="50dip">
+
+        <com.hyphenate.easeui.widget.recyclerview.SimpleViewSwitcher
+            android:id="@+id/header_progressbar"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:layout_centerInParent="true"
+            android:visibility="invisible" />
+    </RelativeLayout>
+</LinearLayout>

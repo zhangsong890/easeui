@@ -3,6 +3,7 @@ package com.hyphenate.easeui.widget.recyclerview;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
@@ -85,7 +86,10 @@ public class DefaultRecyclerView extends RecyclerView {
     @Override
     public void scrollToPosition(int position) {
         int adjPosition = position + getHeaderCount();
-        Log.i(TAG, "scrollToPosition: " + adjPosition);
+        if (getLayoutManager() instanceof LinearLayoutManager) {
+            ((LinearLayoutManager) getLayoutManager()).scrollToPositionWithOffset(adjPosition, 0);
+            return;
+        }
         getLayoutManager().scrollToPosition(adjPosition);
     }
 
@@ -118,7 +122,17 @@ public class DefaultRecyclerView extends RecyclerView {
         mHeaderListener = listener;
     }
 
-    public void complete() {
+    // TODO: refresh the list content.
+    public void refresh() {
+        post(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+    }
+
+    public void finishLoading() {
         if (mHeaderView == null) return;
         mHeaderView.loadingComplete();
     }
