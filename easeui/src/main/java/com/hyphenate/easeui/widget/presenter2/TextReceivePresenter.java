@@ -12,14 +12,18 @@ import com.hyphenate.exceptions.HyphenateException;
  * Created by zhangsong on 17-11-30.
  */
 
-public class TextReceiveRowPresenter extends BaseReceivePresenter {
-    public TextReceiveRowPresenter(Context context) {
+public class TextReceivePresenter extends BaseReceivePresenter {
+    public TextReceivePresenter(Context context) {
         super(context);
     }
 
     @Override
     protected BaseChatRow onCreateChatRow(Context context) {
         return new TextReceiveChatRow(context);
+    }
+
+    @Override
+    public void onBubbleClick(EMMessage message) {
     }
 
     @Override

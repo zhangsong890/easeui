@@ -1,14 +1,30 @@
 package com.hyphenate.easeui.adapter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.widget.EaseChatMessageList;
+import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 import com.hyphenate.easeui.widget.presenter2.BasePresenter;
-import com.hyphenate.easeui.widget.presenter2.TextReceiveRowPresenter;
-import com.hyphenate.easeui.widget.presenter2.TextSendRowPresenter;
+import com.hyphenate.easeui.widget.presenter2.BigExpressionReceivePresenter;
+import com.hyphenate.easeui.widget.presenter2.BigExpressionSendPresenter;
+import com.hyphenate.easeui.widget.presenter2.FileReceivePresenter;
+import com.hyphenate.easeui.widget.presenter2.FileSendPresenter;
+import com.hyphenate.easeui.widget.presenter2.ImageReceivePresenter;
+import com.hyphenate.easeui.widget.presenter2.ImageSendPresenter;
+import com.hyphenate.easeui.widget.presenter2.LocationReceivePresenter;
+import com.hyphenate.easeui.widget.presenter2.LocationSendPresenter;
+import com.hyphenate.easeui.widget.presenter2.TextReceivePresenter;
+import com.hyphenate.easeui.widget.presenter2.TextSendPresenter;
+import com.hyphenate.easeui.widget.presenter2.VideoReceivePresenter;
+import com.hyphenate.easeui.widget.presenter2.VideoSendPresenter;
+import com.hyphenate.easeui.widget.presenter2.VoiceReceivePresenter;
+import com.hyphenate.easeui.widget.presenter2.VoiceSendPresenter;
+import com.hyphenate.util.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +59,9 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
     private Context mContext;
 
     private List<EMMessage> messages = new ArrayList<>();
+
+    private EaseCustomChatRowProvider customRowProvider;
+    private EaseChatMessageList.MessageListItemClickListener itemClickListener;
 //    private EMConversation conversation;
 
 //    private Handler handler;
@@ -71,7 +90,21 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
     @Override
     public void onBindViewHolder(PresenterHolder holder, int position) {
         // Set up the view by message.
-        holder.getPresenter().setup(messages.get(position));
+        EMMessage currentMessage = messages.get(position);
+
+        boolean showTimeStamp = false;
+        if (position == 0) {
+            showTimeStamp = true;
+        } else {
+            EMMessage prevMessage = messages.get(position - 1);
+            if (prevMessage != null && DateUtils.isCloseEnough(currentMessage.getMsgTime(), prevMessage.getMsgTime())) {
+                showTimeStamp = false;
+            } else {
+                showTimeStamp = true;
+            }
+        }
+
+        holder.setup(currentMessage, showTimeStamp, itemClickListener);
     }
 
     @Override
@@ -85,6 +118,9 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
         EMMessage message = messages.get(position);
 
         // TODO: CustomRowProvider?
+        if (customRowProvider != null && customRowProvider.getCustomChatRowType(message) > 0) {
+            return customRowProvider.getCustomChatRowType(message) + 13;
+        }
 
         if (message.getType() == EMMessage.Type.TXT) {
             if (message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false)) {
@@ -110,7 +146,20 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
         return MESSAGE_TYPE_INVALID;// invalid
     }
 
-//    public abstract void scrollToPosition(int position);
+    public void setCustomChatRowProvider(EaseCustomChatRowProvider rowProvider) {
+        customRowProvider = rowProvider;
+    }
+
+    /**
+     * set click listener
+     *
+     * @param listener
+     */
+    public void setItemClickListener(EaseChatMessageList.MessageListItemClickListener listener) {
+        this.itemClickListener = listener;
+    }
+
+    //    public abstract void scrollToPosition(int position);
 
 //    public void refresh() {
 //        Log.i(TAG, "refresh: ");
@@ -179,11 +228,40 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
 //    }
 
     private BasePresenter createPresenterByViewType(int viewType) {
+
+//        if(customRowProvider != null && customRowProvider.getCustomChatRow(message, position, this) != null){
+//            return customRowProvider.getCustomChatRow(message, position, this);
+//        }
+
         switch (viewType) {
             case MESSAGE_TYPE_RECV_TXT:
-                return new TextReceiveRowPresenter(mContext);
+                return new TextReceivePresenter(mContext);
             case MESSAGE_TYPE_SENT_TXT:
-                return new TextSendRowPresenter(mContext);
+                return new TextSendPresenter(mContext);
+            case MESSAGE_TYPE_RECV_EXPRESSION:
+                return new BigExpressionReceivePresenter(mContext);
+            case MESSAGE_TYPE_SENT_EXPRESSION:
+                return new BigExpressionSendPresenter(mContext);
+            case MESSAGE_TYPE_RECV_FILE:
+                return new FileReceivePresenter(mContext);
+            case MESSAGE_TYPE_SENT_FILE:
+                return new FileSendPresenter(mContext);
+            case MESSAGE_TYPE_RECV_LOCATION:
+                return new LocationReceivePresenter(mContext);
+            case MESSAGE_TYPE_SENT_LOCATION:
+                return new LocationSendPresenter(mContext);
+            case MESSAGE_TYPE_RECV_IMAGE:
+                return new ImageReceivePresenter(mContext);
+            case MESSAGE_TYPE_SENT_IMAGE:
+                return new ImageSendPresenter(mContext);
+            case MESSAGE_TYPE_RECV_VOICE:
+                return new VoiceReceivePresenter(mContext);
+            case MESSAGE_TYPE_SENT_VOICE:
+                return new VoiceSendPresenter(mContext);
+            case MESSAGE_TYPE_RECV_VIDEO:
+                return new VideoReceivePresenter(mContext);
+            case MESSAGE_TYPE_SENT_VIDEO:
+                return new VideoSendPresenter(mContext);
         }
         return null;// invalid
     }
@@ -194,6 +272,10 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
         public PresenterHolder(BasePresenter presenter) {
             super(presenter.getContentView());
             mPresenter = presenter;
+        }
+
+        public void setup(EMMessage message, boolean showTimeStamp, @Nullable EaseChatMessageList.MessageListItemClickListener listener) {
+            mPresenter.setup(message, showTimeStamp, listener);
         }
 
         public BasePresenter getPresenter() {

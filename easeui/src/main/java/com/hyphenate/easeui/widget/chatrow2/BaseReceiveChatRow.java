@@ -18,5 +18,21 @@ public abstract class BaseReceiveChatRow extends BaseChatRow {
     @Override
     protected void onViewInflate(View v) {
         userNickView = (TextView) v.findViewById(com.hyphenate.easeui.R.id.tv_userid);
+        userAvatarView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemClickListener != null)
+                    itemClickListener.onUserAvatarClick(message.getFrom());
+            }
+        });
+
+        userAvatarView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (itemClickListener != null)
+                    itemClickListener.onUserAvatarLongClick(message.getFrom());
+                return true;
+            }
+        });
     }
 }

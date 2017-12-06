@@ -14,6 +14,14 @@ public abstract class BaseReceivePresenter extends BasePresenter {
     }
 
     @Override
+    protected void handleReceiveMessage(EMMessage message) {
+    }
+
+    @Override
     protected final void handleSendMessage(EMMessage message) {
+    }
+
+    @Override
+    public final void onResendClick(EMMessage message) {
     }
 }

@@ -1,11 +1,13 @@
 package com.hyphenate.easeui.widget.presenter2;
 
 import android.content.Context;
-import android.util.Log;
+import android.os.Bundle;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.easeui.R;
+import com.hyphenate.easeui.widget.EaseAlertDialog;
 
 /**
  * Created by zhangsong on 17-12-1.
@@ -22,10 +24,10 @@ public abstract class BaseSendPresenter extends BasePresenter {
 
     @Override
     protected void handleSendMessage(final EMMessage message) {
-        EMMessage.Status status = message.status();
-
         // Update the view according to the message current status.
         getChatRow().updateView(message);
+
+        EMMessage.Status status = message.status();
 
         if (status == EMMessage.Status.SUCCESS || status == EMMessage.Status.FAIL) {
             return;
@@ -39,7 +41,6 @@ public abstract class BaseSendPresenter extends BasePresenter {
 
             @Override
             public void onError(int code, String error) {
-                Log.i("EaseChatRowPresenter", "onError: " + code + ", error: " + error);
                 getChatRow().updateView(message);
             }
 
@@ -56,5 +57,19 @@ public abstract class BaseSendPresenter extends BasePresenter {
 
         // Send the message
         EMClient.getInstance().chatManager().sendMessage(message);
+    }
+
+    @Override
+    public void onResendClick(final EMMessage message) {
+        new EaseAlertDialog(getContext(), R.string.resend, R.string.confirm_resend, null, new EaseAlertDialog.AlertDialogUser() {
+            @Override
+            public void onResult(boolean confirmed, Bundle bundle) {
+                if (!confirmed) {
+                    return;
+                }
+                message.setStatus(EMMessage.Status.CREATE);
+                handleSendMessage(message);
+            }
+        }, true).show();
     }
 }

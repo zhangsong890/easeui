@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hyphenate.util.EMLog;
+
 public class DefaultRecyclerView extends RecyclerView {
     private static final String TAG = "DefaultRecyclerView";
 
@@ -292,6 +294,7 @@ public class DefaultRecyclerView extends RecyclerView {
 
         @Override
         public void onViewAttachedToWindow(ViewHolder holder) {
+            EMLog.i(TAG, "onViewAttachedToWindow: ");
             super.onViewAttachedToWindow(holder);
             ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
             if (lp != null
@@ -305,6 +308,8 @@ public class DefaultRecyclerView extends RecyclerView {
 
         @Override
         public void onViewDetachedFromWindow(ViewHolder holder) {
+            EMLog.i(TAG, "onViewDetachedFromWindow: ");
+            if (holder instanceof SimpleViewHolder) return;
             adapter.onViewDetachedFromWindow(holder);
         }
 

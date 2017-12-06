@@ -1,47 +1,41 @@
 package com.hyphenate.easeui.widget.chatrow2;
 
 import android.content.Context;
-import android.text.Spannable;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.R;
-import com.hyphenate.easeui.utils.EaseSmileUtils;
 
 /**
- * Created by zhangsong on 17-12-1.
+ * Created by zhangsong on 17-12-5.
  */
 
-public class TextSendChatRow extends BaseSendChatRow {
-    private static final String TAG = "TextSendChatRow";
+public class LocationSendChatRow extends BaseSendChatRow {
+    private static final String TAG = "LocationSendChatRow";
 
-    private TextView contentView;
+    private TextView locationView;
 
-    public TextSendChatRow(Context context) {
+    public LocationSendChatRow(Context context) {
         super(context);
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ease_row_sent_message;
+        return R.layout.ease_row_sent_location;
     }
 
     @Override
     protected void onViewInflate(View v) {
         super.onViewInflate(v);
-        contentView = (TextView) v.findViewById(com.hyphenate.easeui.R.id.tv_chatcontent);
+        locationView = (TextView) v.findViewById(R.id.tv_location);
     }
 
     @Override
     protected void onViewSetup(EMMessage message) {
-        EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
-        Log.i(TAG, "onViewSetup: " + txtBody.getMessage());
-        Spannable span = EaseSmileUtils.getSmiledText(getContext(), txtBody.getMessage());
-        // 设置内容
-        contentView.setText(span, TextView.BufferType.SPANNABLE);
+        EMLocationMessageBody locBody = (EMLocationMessageBody) message.getBody();
+        locationView.setText(locBody.getAddress());
     }
 
     @Override

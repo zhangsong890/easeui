@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 
 /**
@@ -28,13 +29,29 @@ public abstract class BaseSendChatRow extends BaseChatRow {
         ackView = (TextView) v.findViewById(com.hyphenate.easeui.R.id.tv_ack);
         deliveredView = (TextView) v.findViewById(com.hyphenate.easeui.R.id.tv_delivered);
         progressBar = (ProgressBar) v.findViewById(com.hyphenate.easeui.R.id.progress_bar);
-    }
 
-    @Override
-    protected void onViewSetup(EMMessage message) {
-    }
+        userAvatarView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemClickListener != null)
+                    itemClickListener.onUserAvatarClick(EMClient.getInstance().getCurrentUser());
+            }
+        });
 
-    @Override
-    protected void onViewUpdate(EMMessage message) {
+        userAvatarView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (itemClickListener != null)
+                    itemClickListener.onUserAvatarLongClick(EMClient.getInstance().getCurrentUser());
+                return true;
+            }
+        });
+
+        statusView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemActionListener.onResendClick(message);
+            }
+        });
     }
 }

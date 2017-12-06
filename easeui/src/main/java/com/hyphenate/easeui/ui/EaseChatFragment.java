@@ -40,6 +40,7 @@ import com.hyphenate.easeui.adapter.EaseChatAdapter;
 import com.hyphenate.easeui.domain.EaseEmojicon;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseAtMessageHelper;
+import com.hyphenate.easeui.model.KeyboardStatusWatcher;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
@@ -47,6 +48,7 @@ import com.hyphenate.easeui.widget.EaseAlertDialog.AlertDialogUser;
 import com.hyphenate.easeui.widget.EaseChatExtendMenu;
 import com.hyphenate.easeui.widget.EaseChatInputMenu;
 import com.hyphenate.easeui.widget.EaseChatInputMenu.ChatInputMenuListener;
+import com.hyphenate.easeui.widget.EaseChatMessageList;
 import com.hyphenate.easeui.widget.EaseVoiceRecorderView;
 import com.hyphenate.easeui.widget.EaseVoiceRecorderView.EaseVoiceRecorderCallback;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
@@ -122,6 +124,9 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     private ExecutorService fetchQueue;
     private List<EMMessage> cachedMessages = new ArrayList<>();
 
+    // To watch the soft keyboard open and close.
+    private KeyboardStatusWatcher keyboardStatusWatcher;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.ease_fragment_chat, container, false);
@@ -142,6 +147,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         toChatUsername = fragmentArgs.getString(EaseConstant.EXTRA_USER_ID);
 
         super.onActivityCreated(savedInstanceState);
+
+        initKeyboardStatusWatcher();
     }
 
     /**
@@ -337,56 +344,56 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     protected void onMessageListInit() {
 //        messageList.init(toChatUsername, chatType, chatFragmentHelper != null ?
 //                chatFragmentHelper.onSetCustomChatRowProvider() : null);
-//        setListItemClickListener();
-//
-//        messageList.getListView().setOnTouchListener(new OnTouchListener() {
-//
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                hideKeyboard();
-//                inputMenu.hideExtendMenuContainer();
-//                return false;
-//            }
-//        });
+        setListItemClickListener();
+
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideKeyboard();
+                inputMenu.hideExtendMenuContainer();
+                return false;
+            }
+        });
 
         isMessageListInited = true;
     }
 
-//    protected void setListItemClickListener() {
-//        messageList.setItemClickListener(new EaseChatMessageList.MessageListItemClickListener() {
-//
-//            @Override
-//            public void onUserAvatarClick(String username) {
-//                if (chatFragmentHelper != null) {
-//                    chatFragmentHelper.onAvatarClick(username);
-//                }
-//            }
-//
-//            @Override
-//            public void onUserAvatarLongClick(String username) {
-//                if (chatFragmentHelper != null) {
-//                    chatFragmentHelper.onAvatarLongClick(username);
-//                }
-//            }
-//
-//            @Override
-//            public void onBubbleLongClick(EMMessage message) {
-//                contextMenuMessage = message;
-//                if (chatFragmentHelper != null) {
-//                    chatFragmentHelper.onMessageBubbleLongClick(message);
-//                }
-//            }
-//
-//            @Override
-//            public boolean onBubbleClick(EMMessage message) {
-//                if (chatFragmentHelper == null) {
-//                    return false;
-//                }
-//                return chatFragmentHelper.onMessageBubbleClick(message);
-//            }
-//
-//        });
-//    }
+    protected void setListItemClickListener() {
+        chatAdapter.setItemClickListener(new EaseChatMessageList.MessageListItemClickListener() {
+
+            @Override
+            public void onUserAvatarClick(String username) {
+                if (chatFragmentHelper != null) {
+                    chatFragmentHelper.onAvatarClick(username);
+                }
+            }
+
+            @Override
+            public void onUserAvatarLongClick(String username) {
+                if (chatFragmentHelper != null) {
+                    chatFragmentHelper.onAvatarLongClick(username);
+                }
+            }
+
+            @Override
+            public void onBubbleLongClick(EMMessage message) {
+                contextMenuMessage = message;
+                if (chatFragmentHelper != null) {
+                    chatFragmentHelper.onMessageBubbleLongClick(message);
+                }
+            }
+
+            @Override
+            public boolean onBubbleClick(EMMessage message) {
+                if (chatFragmentHelper == null) {
+                    return false;
+                }
+                return chatFragmentHelper.onMessageBubbleClick(message);
+            }
+
+        });
+    }
 
 //    protected void setRefreshLayoutListener() {
 //        swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -527,6 +534,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        keyboardStatusWatcher.destroy();
 
         if (groupListener != null) {
             EMClient.getInstance().groupManager().removeGroupChangeListener(groupListener);
@@ -1136,6 +1145,18 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
     public void setChatFragmentHelper(EaseChatFragmentHelper chatFragmentHelper) {
         this.chatFragmentHelper = chatFragmentHelper;
+    }
+
+    private void initKeyboardStatusWatcher() {
+        keyboardStatusWatcher = new KeyboardStatusWatcher(getActivity());
+        keyboardStatusWatcher.setOnStatusChangeListener(new KeyboardStatusWatcher.OnStatusChangeListener() {
+            @Override
+            public void onChange(boolean isShow, int keyboardHeight) {
+                if (isShow) {
+                    recyclerView.scrollToPosition(cachedMessages.size() - 1);
+                }
+            }
+        });
     }
 
     public interface EaseChatFragmentHelper {
