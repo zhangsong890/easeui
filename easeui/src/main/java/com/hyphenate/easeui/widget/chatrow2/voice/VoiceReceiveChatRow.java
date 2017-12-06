@@ -12,7 +12,6 @@ import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMVoiceMessageBody;
 import com.hyphenate.easeui.R;
-import com.hyphenate.easeui.widget.chatrow.EaseChatRowVoicePlayer;
 import com.hyphenate.easeui.widget.chatrow2.BaseReceiveChatRow;
 import com.hyphenate.util.EMLog;
 
@@ -75,14 +74,13 @@ public class VoiceReceiveChatRow extends BaseReceiveChatRow {
             } else {
                 progressBar.setVisibility(View.INVISIBLE);
             }
-
         } else {
             progressBar.setVisibility(View.INVISIBLE);
         }
 
         // To avoid the item is recycled by listview and slide to this item again but the animation is stopped.
-        EaseChatRowVoicePlayer voicePlayer = EaseChatRowVoicePlayer.getInstance(getContext());
-        if (voicePlayer.isPlaying() && message.getMsgId().equals(voicePlayer.getCurrentPlayingId())) {
+        EaseVoicePlayer voicePlayer = EaseVoicePlayer.getInstance(getContext());
+        if (voicePlayer.isPlaying() && voicePlayer.isCurrentPlayingMessage(message)) {
             startVoicePlayAnimation();
         }
     }

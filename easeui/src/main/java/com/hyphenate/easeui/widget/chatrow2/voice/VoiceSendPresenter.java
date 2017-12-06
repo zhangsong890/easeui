@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMVoiceMessageBody;
-import com.hyphenate.easeui.widget.chatrow.EaseChatRowVoicePlayer;
 import com.hyphenate.easeui.widget.chatrow2.BaseChatRow;
 import com.hyphenate.easeui.widget.chatrow2.BaseSendPresenter;
 
@@ -20,11 +19,11 @@ import java.io.File;
 public class VoiceSendPresenter extends BaseSendPresenter {
     private static final String TAG = "VoiceSendPresenter";
 
-    private EaseChatRowVoicePlayer voicePlayer;
+    private EaseVoicePlayer voicePlayer;
 
     public VoiceSendPresenter(Context context) {
         super(context);
-        voicePlayer = EaseChatRowVoicePlayer.getInstance(context);
+        voicePlayer = EaseVoicePlayer.getInstance(context);
     }
 
     @Override
@@ -34,8 +33,6 @@ public class VoiceSendPresenter extends BaseSendPresenter {
 
     @Override
     public void onBubbleClick(EMMessage message) {
-        String msgId = message.getMsgId();
-
         if (voicePlayer.isPlaying()) {
             // Stop the voice play first, no matter the playing voice item is this or others.
             voicePlayer.stop();
@@ -43,8 +40,7 @@ public class VoiceSendPresenter extends BaseSendPresenter {
             ((VoiceSendChatRow) getChatRow()).stopVoicePlayAnimation();
 
             // If the playing voice item is this item, only need stop play.
-            String playingId = voicePlayer.getCurrentPlayingId();
-            if (msgId.equals(playingId)) {
+            if (voicePlayer.isCurrentPlayingMessage(message)) {
                 return;
             }
         }

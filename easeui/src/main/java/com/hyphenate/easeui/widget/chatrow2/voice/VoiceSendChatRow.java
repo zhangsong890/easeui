@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMVoiceMessageBody;
 import com.hyphenate.easeui.R;
-import com.hyphenate.easeui.widget.chatrow.EaseChatRowVoicePlayer;
 import com.hyphenate.easeui.widget.chatrow2.BaseSendChatRow;
 
 /**
@@ -56,8 +55,8 @@ public class VoiceSendChatRow extends BaseSendChatRow {
         voiceImageView.setImageResource(R.drawable.ease_chatto_voice_playing);
 
         // To avoid the item is recycled by listview and slide to this item again but the animation is stopped.
-        EaseChatRowVoicePlayer voicePlayer = EaseChatRowVoicePlayer.getInstance(getContext());
-        if (voicePlayer.isPlaying() && message.getMsgId().equals(voicePlayer.getCurrentPlayingId())) {
+        EaseVoicePlayer voicePlayer = EaseVoicePlayer.getInstance(getContext());
+        if (voicePlayer.isPlaying() && voicePlayer.isCurrentPlayingMessage(message)) {
             startVoicePlayAnimation();
         }
     }

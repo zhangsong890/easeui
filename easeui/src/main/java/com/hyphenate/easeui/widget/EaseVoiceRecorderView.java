@@ -18,7 +18,7 @@ import com.hyphenate.EMError;
 import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.model.EaseVoiceRecorder;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
-import com.hyphenate.easeui.widget.chatrow.EaseChatRowVoicePlayer;
+import com.hyphenate.easeui.widget.chatrow2.voice.EaseVoicePlayer;
 
 /**
  * Voice recorder view
@@ -96,7 +96,7 @@ public class EaseVoiceRecorderView extends RelativeLayout {
         switch (event.getAction()) {
         case MotionEvent.ACTION_DOWN:
             try {
-                EaseChatRowVoicePlayer voicePlayer = EaseChatRowVoicePlayer.getInstance(context);
+                EaseVoicePlayer voicePlayer = EaseVoicePlayer.getInstance(context);
                 if (voicePlayer.isPlaying())
                     voicePlayer.stop();
                 v.setPressed(true);

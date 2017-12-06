@@ -9,7 +9,6 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMVoiceMessageBody;
 import com.hyphenate.easeui.R;
-import com.hyphenate.easeui.widget.chatrow.EaseChatRowVoicePlayer;
 import com.hyphenate.easeui.widget.chatrow2.BaseChatRow;
 import com.hyphenate.easeui.widget.chatrow2.BaseReceivePresenter;
 import com.hyphenate.util.EMLog;
@@ -23,11 +22,11 @@ import java.io.File;
 public class VoiceReceivePresenter extends BaseReceivePresenter {
     private static final String TAG = "VoiceReceivePresenter";
 
-    private EaseChatRowVoicePlayer voicePlayer;
+    private EaseVoicePlayer voicePlayer;
 
     public VoiceReceivePresenter(Context context) {
         super(context);
-        voicePlayer = EaseChatRowVoicePlayer.getInstance(context);
+        voicePlayer = EaseVoicePlayer.getInstance(context);
     }
 
     @Override
@@ -37,8 +36,6 @@ public class VoiceReceivePresenter extends BaseReceivePresenter {
 
     @Override
     public void onBubbleClick(EMMessage message) {
-        String msgId = message.getMsgId();
-
         if (voicePlayer.isPlaying()) {
             // Stop the voice play first, no matter the playing voice item is this or others.
             voicePlayer.stop();
@@ -46,8 +43,7 @@ public class VoiceReceivePresenter extends BaseReceivePresenter {
             ((VoiceReceiveChatRow) getChatRow()).stopVoicePlayAnimation();
 
             // If the playing voice item is this item, only need stop play.
-            String playingId = voicePlayer.getCurrentPlayingId();
-            if (msgId.equals(playingId)) {
+            if (voicePlayer.isCurrentPlayingMessage(message)) {
                 return;
             }
         }
