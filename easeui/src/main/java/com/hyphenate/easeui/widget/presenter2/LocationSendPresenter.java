@@ -21,6 +21,11 @@ public class LocationSendPresenter extends BaseSendPresenter {
     }
 
     @Override
+    protected BaseChatRow onCreateChatRow(Context context) {
+        return new LocationSendChatRow(context);
+    }
+
+    @Override
     public void onBubbleClick(EMMessage message) {
         EMLocationMessageBody locBody = (EMLocationMessageBody) message.getBody();
         Intent intent = new Intent(getContext(), EaseBaiduMapActivity.class);
@@ -28,10 +33,5 @@ public class LocationSendPresenter extends BaseSendPresenter {
         intent.putExtra("longitude", locBody.getLongitude());
         intent.putExtra("address", locBody.getAddress());
         getContext().startActivity(intent);
-    }
-
-    @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
-        return new LocationSendChatRow(context);
     }
 }

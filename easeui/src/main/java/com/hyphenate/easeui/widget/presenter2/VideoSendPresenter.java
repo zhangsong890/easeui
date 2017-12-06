@@ -23,6 +23,11 @@ public class VideoSendPresenter extends BaseSendPresenter {
     }
 
     @Override
+    protected BaseChatRow onCreateChatRow(Context context) {
+        return new VideoSendChatRow(context);
+    }
+
+    @Override
     public void onBubbleClick(EMMessage message) {
         EMVideoMessageBody videoBody = (EMVideoMessageBody) message.getBody();
         if (!EMClient.getInstance().getOptions().getAutodownloadThumbnail()) {
@@ -34,14 +39,9 @@ public class VideoSendPresenter extends BaseSendPresenter {
                 return;
             }
         }
-        
+
         Intent intent = new Intent(getContext(), EaseShowVideoActivity.class);
         intent.putExtra("msg", message);
         getContext().startActivity(intent);
-    }
-
-    @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
-        return new VideoSendChatRow(context);
     }
 }

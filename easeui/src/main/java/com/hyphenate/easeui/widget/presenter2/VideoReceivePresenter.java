@@ -23,6 +23,11 @@ public class VideoReceivePresenter extends BaseReceivePresenter {
     }
 
     @Override
+    protected BaseChatRow onCreateChatRow(Context context) {
+        return new VideoReceiveChatRow(context);
+    }
+
+    @Override
     public void onBubbleClick(EMMessage message) {
         EMVideoMessageBody videoBody = (EMVideoMessageBody) message.getBody();
         if (!EMClient.getInstance().getOptions().getAutodownloadThumbnail()) {
@@ -35,21 +40,10 @@ public class VideoReceivePresenter extends BaseReceivePresenter {
             }
         }
 
-        if (!message.isAcked() && message.getChatType() == EMMessage.ChatType.Chat) {
-            try {
-                EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        ackMessage(message);
 
         Intent intent = new Intent(getContext(), EaseShowVideoActivity.class);
         intent.putExtra("msg", message);
         getContext().startActivity(intent);
-    }
-
-    @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
-        return new VideoReceiveChatRow(context);
     }
 }

@@ -52,9 +52,4 @@ public class BigExpressionReceiveChatRow extends TextReceiveChatRow {
             }
         }
     }
-
-    @Override
-    protected void onViewUpdate(EMMessage message) {
-        super.onViewUpdate(message);
-    }
 }

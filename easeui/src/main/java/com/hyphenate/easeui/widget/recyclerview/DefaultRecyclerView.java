@@ -20,8 +20,7 @@ public class DefaultRecyclerView extends RecyclerView {
 
     private static final float DRAG_RATE = 2;
 
-    //下面的ItemViewType是保留值(ReservedItemViewType),如果用户的adapter与它们重复将会强制抛出异常。不过为了简化,我们检测到重复时对用户的提示是ItemViewType必须小于10000
-    private static final int TYPE_HEADER = 100000;//设置一个很大的数字,尽可能避免和用户的adapter冲突
+    private static final int TYPE_HEADER = 100000;
     private static final int TYPE_FOOTER = 100001;
 
     private final RecyclerView.AdapterDataObserver mDataObserver = new DataObserver();

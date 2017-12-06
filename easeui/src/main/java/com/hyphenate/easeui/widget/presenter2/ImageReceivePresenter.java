@@ -27,6 +27,11 @@ public class ImageReceivePresenter extends BaseReceivePresenter {
     }
 
     @Override
+    protected BaseChatRow onCreateChatRow(Context context) {
+        return new ImageReceiveChatRow(context);
+    }
+
+    @Override
     public void onBubbleClick(EMMessage message) {
         EMImageMessageBody imgBody = (EMImageMessageBody) message.getBody();
         if (EMClient.getInstance().getOptions().getAutodownloadThumbnail()) {
@@ -45,6 +50,9 @@ public class ImageReceivePresenter extends BaseReceivePresenter {
                 return;
             }
         }
+
+        ackMessage(message);
+
         Intent intent = new Intent(getContext(), EaseShowBigImageActivity.class);
         File file = new File(imgBody.getLocalUrl());
         if (file.exists()) {
@@ -58,19 +66,7 @@ public class ImageReceivePresenter extends BaseReceivePresenter {
             intent.putExtra("messageId", msgId);
             intent.putExtra("localUrl", imgBody.getLocalUrl());
         }
-        if (!message.isAcked() && message.getChatType() == EMMessage.ChatType.Chat) {
-            try {
-                EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
         getContext().startActivity(intent);
-    }
-
-    @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
-        return new ImageReceiveChatRow(context);
     }
 
     @Override

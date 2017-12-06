@@ -28,12 +28,6 @@ public class TextReceivePresenter extends BaseReceivePresenter {
 
     @Override
     protected void handleReceiveMessage(EMMessage message) {
-        if (!message.isAcked() && message.getChatType() == EMMessage.ChatType.Chat) {
-            try {
-                EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
-            } catch (HyphenateException e) {
-                e.printStackTrace();
-            }
-        }
+        ackMessage(message);
     }
 }

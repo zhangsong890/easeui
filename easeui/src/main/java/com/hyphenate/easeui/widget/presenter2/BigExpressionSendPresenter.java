@@ -18,11 +18,11 @@ public class BigExpressionSendPresenter extends TextSendPresenter {
     }
 
     @Override
-    public void onBubbleClick(EMMessage message) {
+    protected BaseChatRow onCreateChatRow(Context context) {
+        return new BigExpressionSendChatRow(context);
     }
 
     @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
-        return new BigExpressionSendChatRow(context);
+    public void onBubbleClick(EMMessage message) {
     }
 }

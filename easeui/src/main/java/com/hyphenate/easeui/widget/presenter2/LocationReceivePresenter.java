@@ -23,6 +23,11 @@ public class LocationReceivePresenter extends BaseReceivePresenter {
     }
 
     @Override
+    protected BaseChatRow onCreateChatRow(Context context) {
+        return new LocationReceiveChatRow(context);
+    }
+
+    @Override
     public void onBubbleClick(EMMessage message) {
         EMLocationMessageBody locBody = (EMLocationMessageBody) message.getBody();
         Intent intent = new Intent(getContext(), EaseBaiduMapActivity.class);
@@ -33,18 +38,7 @@ public class LocationReceivePresenter extends BaseReceivePresenter {
     }
 
     @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
-        return new LocationReceiveChatRow(context);
-    }
-
-    @Override
     protected void handleReceiveMessage(EMMessage message) {
-        if (!message.isAcked() && message.getChatType() == EMMessage.ChatType.Chat) {
-            try {
-                EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
-            } catch (HyphenateException e) {
-                e.printStackTrace();
-            }
-        }
+        ackMessage(message);
     }
 }

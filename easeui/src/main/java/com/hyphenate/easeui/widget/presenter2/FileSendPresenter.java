@@ -25,6 +25,11 @@ public class FileSendPresenter extends BaseSendPresenter {
     }
 
     @Override
+    protected BaseChatRow onCreateChatRow(Context context) {
+        return new FileSendChatRow(context);
+    }
+
+    @Override
     public void onBubbleClick(EMMessage message) {
         EMNormalFileMessageBody fileMessageBody = (EMNormalFileMessageBody) message.getBody();
         String filePath = fileMessageBody.getLocalUrl();
@@ -36,10 +41,5 @@ public class FileSendPresenter extends BaseSendPresenter {
             // download the file
             getContext().startActivity(new Intent(getContext(), EaseShowNormalFileActivity.class).putExtra("msg", message));
         }
-    }
-
-    @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
-        return new FileSendChatRow(context);
     }
 }

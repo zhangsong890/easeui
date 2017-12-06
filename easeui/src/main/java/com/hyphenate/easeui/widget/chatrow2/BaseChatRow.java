@@ -20,6 +20,8 @@ import com.hyphenate.util.EMLog;
 import java.util.Date;
 
 /**
+ * A ChatRow is a message list item view.
+ * <p>
  * Created by zhangsong on 17-11-30.
  */
 
@@ -80,6 +82,13 @@ public abstract class BaseChatRow implements View.OnAttachStateChangeListener {
         itemActionListener.onViewDetachedFromWindow();
     }
 
+    /**
+     * If setup the ChatRow views first time, must call this method to setup the base views.
+     * This base views will not be updated.
+     *
+     * @param message       The message for ChatRow to setup.
+     * @param showTimeStamp If true ChatRow will show the timestamp view according to the message time.
+     */
     public final void setupView(final EMMessage message, final boolean showTimeStamp) {
         this.message = message;
 
@@ -93,14 +102,11 @@ public abstract class BaseChatRow implements View.OnAttachStateChangeListener {
         });
     }
 
-    public void setActionListener(@NonNull ItemActionListener listener) {
-        this.itemActionListener = listener;
-    }
-
-    public void setItemClickListener(EaseChatMessageList.MessageListItemClickListener listener) {
-        this.itemClickListener = listener;
-    }
-
+    /**
+     * Update ChatRow views by message contents, base views will not be updated.
+     *
+     * @param message The message for ChatRow to update.
+     */
     public void updateView(final EMMessage message) {
         runOnUiThread(new Runnable() {
             @Override
@@ -108,6 +114,19 @@ public abstract class BaseChatRow implements View.OnAttachStateChangeListener {
                 onViewUpdate(message);
             }
         });
+    }
+
+    /**
+     * This is only for presenter, do not call from other place.
+     *
+     * @param listener
+     */
+    public void setActionListener(@NonNull ItemActionListener listener) {
+        this.itemActionListener = listener;
+    }
+
+    public void setItemClickListener(EaseChatMessageList.MessageListItemClickListener listener) {
+        this.itemClickListener = listener;
     }
 
     public View getContentView() {
@@ -122,13 +141,37 @@ public abstract class BaseChatRow implements View.OnAttachStateChangeListener {
         uiThreadExecutor.post(runnable);
     }
 
+    /**
+     * Every ChatRow must provide a layout resource to inflate.
+     *
+     * @return Layout resource id.
+     */
     @LayoutRes
     protected abstract int getLayoutId();
 
+    /**
+     * The content view is inflated, you can get your specific views
+     * by {@link View#findViewById(int)}
+     * <p>
+     * NOTE: ChatRow is not a view, find view be like this:
+     * View view = v.findViewById(id);
+     *
+     * @param v
+     */
     protected abstract void onViewInflate(View v);
 
+    /**
+     * Init view by message contents.
+     *
+     * @param message
+     */
     protected abstract void onViewSetup(EMMessage message);
 
+    /**
+     * Update views by message contents.
+     *
+     * @param message
+     */
     protected abstract void onViewUpdate(EMMessage message);
 
     private void inflateView() {

@@ -22,6 +22,5 @@ public class TextSendPresenter extends BaseSendPresenter {
 
     @Override
     public void onBubbleClick(EMMessage message) {
-
     }
 }

@@ -32,6 +32,11 @@ public class VoiceReceivePresenter extends BaseReceivePresenter {
     }
 
     @Override
+    protected BaseChatRow onCreateChatRow(Context context) {
+        return new VoiceReceiveChatRow(context);
+    }
+
+    @Override
     public void onBubbleClick(EMMessage message) {
         String msgId = message.getMsgId();
 
@@ -78,11 +83,6 @@ public class VoiceReceivePresenter extends BaseReceivePresenter {
     }
 
     @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
-        return new VoiceReceiveChatRow(context);
-    }
-
-    @Override
     public void onViewDetachedFromWindow() {
         super.onViewDetachedFromWindow();
         if (voicePlayer.isPlaying()) {
@@ -119,15 +119,9 @@ public class VoiceReceivePresenter extends BaseReceivePresenter {
         }
     }
 
-    private void ackMessage(EMMessage message) {
-        EMMessage.ChatType chatType = message.getChatType();
-        if (!message.isAcked() && chatType == EMMessage.ChatType.Chat) {
-            try {
-                EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
-            } catch (HyphenateException e) {
-                e.printStackTrace();
-            }
-        }
+    protected void ackMessage(EMMessage message) {
+        super.ackMessage(message);
+
         if (!message.isListened()) {
             EMClient.getInstance().chatManager().setVoiceMessageListened(message);
         }

@@ -38,7 +38,6 @@ public class TextSendChatRow extends BaseSendChatRow {
     @Override
     protected void onViewSetup(EMMessage message) {
         EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
-        Log.i(TAG, "onViewSetup: " + txtBody.getMessage());
         Spannable span = EaseSmileUtils.getSmiledText(getContext(), txtBody.getMessage());
         // 设置内容
         contentView.setText(span, TextView.BufferType.SPANNABLE);

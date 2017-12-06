@@ -26,6 +26,11 @@ public class ImageSendPresenter extends BaseSendPresenter {
     }
 
     @Override
+    protected BaseChatRow onCreateChatRow(Context context) {
+        return new ImageSendChatRow(context);
+    }
+
+    @Override
     public void onBubbleClick(EMMessage message) {
         EMImageMessageBody imgBody = (EMImageMessageBody) message.getBody();
         if(EMClient.getInstance().getOptions().getAutodownloadThumbnail()){
@@ -66,10 +71,5 @@ public class ImageSendPresenter extends BaseSendPresenter {
             }
         }
         getContext().startActivity(intent);
-    }
-
-    @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
-        return new ImageSendChatRow(context);
     }
 }

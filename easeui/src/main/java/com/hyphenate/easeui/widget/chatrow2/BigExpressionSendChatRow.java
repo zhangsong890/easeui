@@ -37,24 +37,19 @@ public class BigExpressionSendChatRow extends TextSendChatRow {
 
     @Override
     protected void onViewSetup(EMMessage message) {
-        String emojiconId = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXPRESSION_ID, null);
-        EaseEmojicon emojicon = null;
+        String emojIconId = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXPRESSION_ID, null);
+        EaseEmojicon emojIcon = null;
         if (EaseUI.getInstance().getEmojiconInfoProvider() != null) {
-            emojicon = EaseUI.getInstance().getEmojiconInfoProvider().getEmojiconInfo(emojiconId);
+            emojIcon = EaseUI.getInstance().getEmojiconInfoProvider().getEmojiconInfo(emojIconId);
         }
-        if (emojicon != null) {
-            if (emojicon.getBigIcon() != 0) {
-                Glide.with(getContext()).load(emojicon.getBigIcon()).placeholder(R.drawable.ease_default_expression).into(imageView);
-            } else if (emojicon.getBigIconPath() != null) {
-                Glide.with(getContext()).load(emojicon.getBigIconPath()).placeholder(R.drawable.ease_default_expression).into(imageView);
+        if (emojIcon != null) {
+            if (emojIcon.getBigIcon() != 0) {
+                Glide.with(getContext()).load(emojIcon.getBigIcon()).placeholder(R.drawable.ease_default_expression).into(imageView);
+            } else if (emojIcon.getBigIconPath() != null) {
+                Glide.with(getContext()).load(emojIcon.getBigIconPath()).placeholder(R.drawable.ease_default_expression).into(imageView);
             } else {
                 imageView.setImageResource(R.drawable.ease_default_expression);
             }
         }
-    }
-
-    @Override
-    protected void onViewUpdate(EMMessage message) {
-        super.onViewUpdate(message);
     }
 }

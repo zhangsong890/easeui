@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMNormalFileMessageBody;
 import com.hyphenate.easeui.ui.EaseShowNormalFileActivity;
 import com.hyphenate.easeui.widget.chatrow2.BaseChatRow;
 import com.hyphenate.easeui.widget.chatrow2.FileReceiveChatRow;
-import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.FileUtils;
 
 import java.io.File;
@@ -27,6 +25,11 @@ public class FileReceivePresenter extends BaseReceivePresenter {
     }
 
     @Override
+    protected BaseChatRow onCreateChatRow(Context context) {
+        return new FileReceiveChatRow(context);
+    }
+
+    @Override
     public void onBubbleClick(EMMessage message) {
         EMNormalFileMessageBody fileMessageBody = (EMNormalFileMessageBody) message.getBody();
         String filePath = fileMessageBody.getLocalUrl();
@@ -39,18 +42,6 @@ public class FileReceivePresenter extends BaseReceivePresenter {
             getContext().startActivity(new Intent(getContext(), EaseShowNormalFileActivity.class).putExtra("msg", message));
         }
 
-        if (!message.isAcked() && message.getChatType() == EMMessage.ChatType.Chat) {
-            try {
-                EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
-            } catch (HyphenateException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
-        return new FileReceiveChatRow(context);
+        ackMessage(message);
     }
 }

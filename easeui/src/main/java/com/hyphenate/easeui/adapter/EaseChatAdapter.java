@@ -36,10 +36,6 @@ import java.util.List;
 public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.PresenterHolder> {
     private static final String TAG = "EaseChatAdapter";
 
-    private static final int MSG_REFRESH_LIST = 0;
-    private static final int MSG_SELECT_LAST = 1;
-    private static final int MSG_SEEK_TO = 2;
-
     private static final int MESSAGE_TYPE_INVALID = -1;
     private static final int MESSAGE_TYPE_RECV_TXT = 0;
     private static final int MESSAGE_TYPE_SENT_TXT = 1;
@@ -62,18 +58,6 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
 
     private EaseCustomChatRowProvider customRowProvider;
     private EaseChatMessageList.MessageListItemClickListener itemClickListener;
-//    private EMConversation conversation;
-
-//    private Handler handler;
-
-    public EaseChatAdapter(Context context, String toUsername, int chatType) {
-        this.mContext = context;
-
-//        this.conversation = EMClient.getInstance().chatManager().getConversation(toUsername,
-//                EaseCommonUtils.getConversationType(chatType), true);
-
-//        initHandler();
-    }
 
     public EaseChatAdapter(Context context, List<EMMessage> messages) {
         this.mContext = context;
@@ -159,76 +143,7 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
         this.itemClickListener = listener;
     }
 
-    //    public abstract void scrollToPosition(int position);
-
-//    public void refresh() {
-//        Log.i(TAG, "refresh: ");
-//        if (handler.hasMessages(MSG_REFRESH_LIST)) {
-//            return;
-//        }
-//        android.os.Message msg = handler.obtainMessage(MSG_REFRESH_LIST);
-//        handler.sendMessage(msg);
-//    }
-//
-//    /**
-//     * refresh and select the last
-//     */
-//    public void refreshSelectLast() {
-//        Log.i(TAG, "refreshSelectLast: ");
-//        handler.removeMessages(MSG_REFRESH_LIST);
-//        handler.removeMessages(MSG_SELECT_LAST);
-//        handler.sendEmptyMessage(MSG_REFRESH_LIST);
-//        handler.sendEmptyMessage(MSG_SELECT_LAST);
-//    }
-//
-//    /**
-//     * refresh and seek to the position
-//     */
-//    public void refreshSeekTo(int position) {
-//        handler.removeMessages(MSG_REFRESH_LIST);
-//        handler.removeMessages(MSG_SEEK_TO);
-//
-//        handler.sendEmptyMessage(MSG_REFRESH_LIST);
-//        Message message = handler.obtainMessage(MSG_SEEK_TO);
-//        message.arg1 = position;
-//        message.sendToTarget();
-//    }
-
-//    private void initHandler() {
-//        handler = new Handler(Looper.getMainLooper()) {
-//            private void refreshList() {
-//                // you should not call getAllMessages() in UI thread
-//                // otherwise there is problem when refreshing UI and there is new message arrive
-//                messages.clear();
-//                messages.addAll(conversation.getAllMessages());
-//                conversation.markAllMessagesAsRead();
-//                notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void handleMessage(Message msg) {
-//                switch (msg.what) {
-//                    case MSG_REFRESH_LIST:
-//                        refreshList();
-//                        break;
-//                    case MSG_SELECT_LAST:
-//                        scrollToPosition(messages.size() - 1);
-//                        break;
-//                    case MSG_SEEK_TO:
-//                        int position = msg.arg1;
-//                        // TODO: scroll the view to a special position
-//                        scrollToPosition(position);
-//                        break;
-//                    default:
-//                        super.handleMessage(msg);
-//                        break;
-//                }
-//            }
-//        };
-//    }
-
     private BasePresenter createPresenterByViewType(int viewType) {
-
 //        if(customRowProvider != null && customRowProvider.getCustomChatRow(message, position, this) != null){
 //            return customRowProvider.getCustomChatRow(message, position, this);
 //        }
