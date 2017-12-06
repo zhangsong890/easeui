@@ -121,7 +121,7 @@ public abstract class BaseChatRow implements View.OnAttachStateChangeListener {
      *
      * @param listener
      */
-    public void setActionListener(@NonNull ItemActionListener listener) {
+    void setActionListener(@NonNull ItemActionListener listener) {
         this.itemActionListener = listener;
     }
 
