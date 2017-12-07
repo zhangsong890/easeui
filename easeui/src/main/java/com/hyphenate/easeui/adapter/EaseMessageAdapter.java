@@ -28,7 +28,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
-import com.hyphenate.easeui.widget.EaseChatMessageList.MessageListItemClickListener;
+import com.hyphenate.easeui.widget.EaseMessageClickListener;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 import com.hyphenate.easeui.widget.presenter.EaseChatBigExpressionPresenter;
 import com.hyphenate.easeui.widget.presenter.EaseChatFilePresenter;
@@ -73,7 +73,7 @@ public class EaseMessageAdapter extends BaseAdapter{
 	
     private String toChatUsername;
 
-    private MessageListItemClickListener itemClickListener;
+    private EaseMessageClickListener itemClickListener;
     private EaseCustomChatRowProvider customRowProvider;
     
     private boolean showUserNick;
@@ -279,7 +279,7 @@ public class EaseMessageAdapter extends BaseAdapter{
 	}
 
 
-    public void setItemClickListener(MessageListItemClickListener listener){
+    public void setItemClickListener(EaseMessageClickListener listener){
 	    itemClickListener = listener;
 	}
 	

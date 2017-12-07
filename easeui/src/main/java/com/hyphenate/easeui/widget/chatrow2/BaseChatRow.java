@@ -13,9 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.easeui.widget.EaseChatMessageList;
+import com.hyphenate.easeui.widget.EaseMessageClickListener;
 import com.hyphenate.util.DateUtils;
-import com.hyphenate.util.EMLog;
 
 import java.util.Date;
 
@@ -62,7 +61,7 @@ public abstract class BaseChatRow implements View.OnAttachStateChangeListener {
     private Handler uiThreadExecutor;
 
     protected ItemActionListener itemActionListener;
-    protected EaseChatMessageList.MessageListItemClickListener itemClickListener;
+    protected EaseMessageClickListener itemClickListener;
 
     public BaseChatRow(Context context) {
         this.context = context;
@@ -125,7 +124,7 @@ public abstract class BaseChatRow implements View.OnAttachStateChangeListener {
         this.itemActionListener = listener;
     }
 
-    public void setItemClickListener(EaseChatMessageList.MessageListItemClickListener listener) {
+    public void setItemClickListener(EaseMessageClickListener listener) {
         this.itemClickListener = listener;
     }
 

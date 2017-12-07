@@ -7,8 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.easeui.widget.EaseChatMessageList;
-import com.hyphenate.easeui.widget.chatrow2.BaseChatRow;
+import com.hyphenate.easeui.widget.EaseMessageClickListener;
 
 /**
  * A presenter is a holder of a BaseChatRow, all ChatRow's view update logic will be in
@@ -49,7 +48,7 @@ public abstract class BasePresenter implements BaseChatRow.ItemActionListener {
      * @param listener      User can set a listener to handle the click actions.
      */
     public final void setup(EMMessage message, boolean showTimeStamp,
-                            @Nullable EaseChatMessageList.MessageListItemClickListener listener) {
+                            @Nullable EaseMessageClickListener listener) {
         chatRow.setupView(message, showTimeStamp);
         chatRow.setActionListener(this);
         if (listener != null) {

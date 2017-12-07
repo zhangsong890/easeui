@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
-import com.hyphenate.easeui.widget.EaseChatMessageList;
+import com.hyphenate.easeui.widget.EaseMessageClickListener;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 import com.hyphenate.easeui.widget.chatrow2.BasePresenter;
 import com.hyphenate.easeui.widget.chatrow2.bigexpression.BigExpressionReceivePresenter;
@@ -57,7 +57,7 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
     private List<EMMessage> messages = new ArrayList<>();
 
     private EaseCustomChatRowProvider customRowProvider;
-    private EaseChatMessageList.MessageListItemClickListener itemClickListener;
+    private EaseMessageClickListener itemClickListener;
 
     public EaseChatAdapter(Context context, List<EMMessage> messages) {
         this.mContext = context;
@@ -139,7 +139,7 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
      *
      * @param listener
      */
-    public void setItemClickListener(EaseChatMessageList.MessageListItemClickListener listener) {
+    public void setItemClickListener(EaseMessageClickListener listener) {
         this.itemClickListener = listener;
     }
 
@@ -189,7 +189,7 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
             mPresenter = presenter;
         }
 
-        public void setup(EMMessage message, boolean showTimeStamp, @Nullable EaseChatMessageList.MessageListItemClickListener listener) {
+        public void setup(EMMessage message, boolean showTimeStamp, @Nullable EaseMessageClickListener listener) {
             mPresenter.setup(message, showTimeStamp, listener);
         }
 

@@ -48,7 +48,7 @@ import com.hyphenate.easeui.widget.EaseAlertDialog.AlertDialogUser;
 import com.hyphenate.easeui.widget.EaseChatExtendMenu;
 import com.hyphenate.easeui.widget.EaseChatInputMenu;
 import com.hyphenate.easeui.widget.EaseChatInputMenu.ChatInputMenuListener;
-import com.hyphenate.easeui.widget.EaseChatMessageList;
+import com.hyphenate.easeui.widget.EaseMessageClickListener;
 import com.hyphenate.easeui.widget.EaseVoiceRecorderView;
 import com.hyphenate.easeui.widget.EaseVoiceRecorderView.EaseVoiceRecorderCallback;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
@@ -360,7 +360,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     }
 
     protected void setListItemClickListener() {
-        chatAdapter.setItemClickListener(new EaseChatMessageList.MessageListItemClickListener() {
+        chatAdapter.setItemClickListener(new EaseMessageClickListener() {
 
             @Override
             public void onUserAvatarClick(String username) {

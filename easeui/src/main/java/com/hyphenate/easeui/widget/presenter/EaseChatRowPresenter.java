@@ -12,6 +12,7 @@ import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
 import com.hyphenate.easeui.widget.EaseChatMessageList;
+import com.hyphenate.easeui.widget.EaseMessageClickListener;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
 
 /**
@@ -56,7 +57,7 @@ public abstract class EaseChatRowPresenter implements EaseChatRow.EaseChatRowAct
     }
 
     public void setup(EMMessage msg, int position,
-                      EaseChatMessageList.MessageListItemClickListener itemClickListener,
+                      EaseMessageClickListener itemClickListener,
                       EaseMessageListItemStyle itemStyle) {
         this.message = msg;
         this.position = position;
