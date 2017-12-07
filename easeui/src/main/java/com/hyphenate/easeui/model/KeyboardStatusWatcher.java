@@ -69,6 +69,7 @@ public class KeyboardStatusWatcher implements ViewTreeObserver.OnGlobalLayoutLis
                 hasChange = false;
             }
         }
+        Log.i(TAG, "onGlobalLayout: " + hasChange);
         if (hasChange) {
             boolean isShow;
             int keyboardHeight = 0;

@@ -40,7 +40,6 @@ import com.hyphenate.easeui.adapter.EaseChatAdapter;
 import com.hyphenate.easeui.domain.EaseEmojicon;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseAtMessageHelper;
-import com.hyphenate.easeui.model.KeyboardStatusWatcher;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
@@ -124,9 +123,6 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     private ExecutorService fetchQueue;
     private List<EMMessage> cachedMessages = new ArrayList<>();
 
-    // To watch the soft keyboard open and close.
-    private KeyboardStatusWatcher keyboardStatusWatcher;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.ease_fragment_chat, container, false);
@@ -147,8 +143,6 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         toChatUsername = fragmentArgs.getString(EaseConstant.EXTRA_USER_ID);
 
         super.onActivityCreated(savedInstanceState);
-
-        initKeyboardStatusWatcher();
     }
 
     /**
@@ -206,6 +200,12 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
                         sendVoiceMessage(voiceFilePath, voiceTimeLength);
                     }
                 });
+            }
+
+            @Override
+            public void onMenuShown(@EaseChatInputMenu.InputMenu int menu) {
+                Log.i(TAG, "onMenuShown: " + menu);
+                recyclerView.scrollToPosition(cachedMessages.size() - 1);
             }
 
             @Override
@@ -350,7 +350,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                hideKeyboard();
+                inputMenu.hideKeyboard();
                 inputMenu.hideExtendMenuContainer();
                 return false;
             }
@@ -534,8 +534,6 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        keyboardStatusWatcher.destroy();
 
         if (groupListener != null) {
             EMClient.getInstance().groupManager().removeGroupChangeListener(groupListener);
@@ -992,17 +990,6 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     }
 
     /**
-     * hide
-     */
-    protected void hideKeyboard() {
-        if (getActivity().getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
-            if (getActivity().getCurrentFocus() != null)
-                inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
-                        InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
-    /**
      * forward message
      *
      * @param forward_msg_id
@@ -1137,26 +1124,12 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
                 });
             }
         }
-
-
     }
 
     protected EaseChatFragmentHelper chatFragmentHelper;
 
     public void setChatFragmentHelper(EaseChatFragmentHelper chatFragmentHelper) {
         this.chatFragmentHelper = chatFragmentHelper;
-    }
-
-    private void initKeyboardStatusWatcher() {
-        keyboardStatusWatcher = new KeyboardStatusWatcher(getActivity());
-        keyboardStatusWatcher.setOnStatusChangeListener(new KeyboardStatusWatcher.OnStatusChangeListener() {
-            @Override
-            public void onChange(boolean isShow, int keyboardHeight) {
-                if (isShow) {
-                    recyclerView.scrollToPosition(cachedMessages.size() - 1);
-                }
-            }
-        });
     }
 
     public interface EaseChatFragmentHelper {

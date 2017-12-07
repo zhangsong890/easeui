@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="#f2f0eb" >
+    android:background="#f2f0eb">
 
     <com.hyphenate.easeui.widget.EaseTitleBar
         android:id="@+id/title_bar"
@@ -12,11 +12,17 @@
         android:layout_height="wrap_content"
         hyphenate:titleBarLeftImage="@drawable/ease_mm_title_back" />
 
+    <com.hyphenate.easeui.widget.EaseChatInputMenu
+        android:id="@+id/input_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/input_menu"
-        android:layout_below="@id/title_bar" >
+        android:layout_below="@id/title_bar">
 
         <com.hyphenate.easeui.widget.recyclerview.DefaultRecyclerView
             android:id="@+id/message_list"
@@ -30,11 +36,5 @@
             android:layout_centerInParent="true"
             android:visibility="invisible" />
     </RelativeLayout>
-
-    <com.hyphenate.easeui.widget.EaseChatInputMenu
-        android:id="@+id/input_menu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>
