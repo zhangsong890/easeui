@@ -83,8 +83,8 @@ public class EaseChatMessageList extends RelativeLayout{
         itemStyle = builder.build();
         ta.recycle();
     }
-    
-    
+
+
     /**
      * refresh
      */
@@ -134,26 +134,26 @@ public class EaseChatMessageList extends RelativeLayout{
     }
 
 
-//    public interface MessageListItemClickListener{
-//	    /**
-//	     * there is default handling when bubble is clicked, if you want handle it, return true
-//	     * another way is you implement in onBubbleClick() of chat row
-//	     * @param message
-//	     * @return
-//	     */
-//	    boolean onBubbleClick(EMMessage message);
-//	    void onBubbleLongClick(EMMessage message);
-//	    void onUserAvatarClick(String username);
-//	    void onUserAvatarLongClick(String username);
-//	}
+    public interface MessageListItemClickListener{
+	    /**
+	     * there is default handling when bubble is clicked, if you want handle it, return true
+	     * another way is you implement in onBubbleClick() of chat row
+	     * @param message
+	     * @return
+	     */
+	    boolean onBubbleClick(EMMessage message);
+	    void onBubbleLongClick(EMMessage message);
+	    void onUserAvatarClick(String username);
+	    void onUserAvatarLongClick(String username);
+	}
 	
 	/**
 	 * set click listener
 	 * @param listener
 	 */
-	public void setItemClickListener(EaseMessageClickListener listener){
+	public void setItemClickListener(MessageListItemClickListener listener){
         if (messageAdapter != null) {
-            messageAdapter.setItemClickListener(listener);
+//            messageAdapter.setItemClickListener(listener);
         }
 	}
 	
