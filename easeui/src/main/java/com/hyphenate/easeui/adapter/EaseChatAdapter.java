@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
 import com.hyphenate.easeui.widget.EaseMessageClickListener;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 import com.hyphenate.easeui.widget.chatrow2.BasePresenter;
@@ -25,6 +26,7 @@ import com.hyphenate.easeui.widget.chatrow2.video.VideoSendPresenter;
 import com.hyphenate.easeui.widget.chatrow2.voice.VoiceReceivePresenter;
 import com.hyphenate.easeui.widget.chatrow2.voice.VoiceSendPresenter;
 import com.hyphenate.util.DateUtils;
+import com.hyphenate.util.EMLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +58,7 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
 
     private List<EMMessage> messages = new ArrayList<>();
 
+    private EaseMessageListItemStyle itemStyle;
     private EaseCustomChatRowProvider customRowProvider;
     private EaseMessageClickListener itemClickListener;
 
@@ -68,6 +71,7 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
     public PresenterHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Create the Presenter by viewType.
         BasePresenter presenter = createPresenterByViewType(viewType);
+        EMLog.i(TAG, "create presenter holder, view type: " + viewType + " , presenter: " + presenter);
         return new PresenterHolder(presenter);
     }
 
@@ -101,9 +105,8 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
         // Return the layout id?
         EMMessage message = messages.get(position);
 
-        // TODO: CustomRowProvider?
-        if (customRowProvider != null && customRowProvider.getCustomChatRowType(message) > 0) {
-            return customRowProvider.getCustomChatRowType(message) + 13;
+        if (customRowProvider != null && customRowProvider.getItemViewType(message) != MESSAGE_TYPE_INVALID) {
+            return customRowProvider.getItemViewType(message) + 14;
         }
 
         if (message.getType() == EMMessage.Type.TXT) {
@@ -130,6 +133,10 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
         return MESSAGE_TYPE_INVALID;// invalid
     }
 
+    public void setItemStyle(EaseMessageListItemStyle style) {
+        this.itemStyle = style;
+    }
+
     public void setCustomChatRowProvider(EaseCustomChatRowProvider rowProvider) {
         customRowProvider = rowProvider;
     }
@@ -144,9 +151,9 @@ public class EaseChatAdapter extends RecyclerView.Adapter<EaseChatAdapter.Presen
     }
 
     private BasePresenter createPresenterByViewType(int viewType) {
-//        if(customRowProvider != null && customRowProvider.getCustomChatRow(message, position, this) != null){
-//            return customRowProvider.getCustomChatRow(message, position, this);
-//        }
+        if (customRowProvider != null && customRowProvider.createPresenterByViewType(viewType - 14) != null) {
+            return customRowProvider.createPresenterByViewType(viewType - 14);
+        }
 
         switch (viewType) {
             case MESSAGE_TYPE_RECV_TXT:

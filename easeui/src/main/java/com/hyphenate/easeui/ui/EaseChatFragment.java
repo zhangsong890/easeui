@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
@@ -51,6 +52,7 @@ import com.hyphenate.util.EMLog;
 import com.hyphenate.util.PathUtil;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * you can new an EaseChatFragment to use or you can inherit it to expand.
@@ -59,7 +61,7 @@ import java.io.File;
  * <br/>
  * you can see ChatActivity in demo for your reference
  */
-public class EaseChatFragment extends EaseBaseFragment {
+public class EaseChatFragment extends EaseBaseFragment implements EMMessageListener {
     protected static final String TAG = "EaseChatFragment";
 
     protected static final int REQUEST_CODE_MAP = 1;
@@ -160,8 +162,7 @@ public class EaseChatFragment extends EaseBaseFragment {
             }
 
             @Override
-            public void onMenuShown(@EaseChatInputMenu.InputMenu int menu) {
-                Log.i(TAG, "onMenuShown: " + menu);
+            public void onMenuShow(@EaseChatInputMenu.InputMenu int menu) {
                 messageList.scrollToLast();
             }
 
@@ -328,7 +329,7 @@ public class EaseChatFragment extends EaseBaseFragment {
 
         EaseUI.getInstance().pushActivity(getActivity());
         // register the event listener when enter the foreground
-        EMClient.getInstance().chatManager().addMessageListener(messageList);
+        EMClient.getInstance().chatManager().addMessageListener(this);
 
         if (chatType == EaseConstant.CHATTYPE_GROUP) {
             EaseAtMessageHelper.get().removeAtMeGroup(toChatUsername);
@@ -340,7 +341,7 @@ public class EaseChatFragment extends EaseBaseFragment {
         super.onStop();
         // unregister this event listener when this activity enters the
         // background
-        EMClient.getInstance().chatManager().removeMessageListener(messageList);
+        EMClient.getInstance().chatManager().removeMessageListener(this);
 
         // remove activity from foreground activity list
         EaseUI.getInstance().popActivity(getActivity());
@@ -362,6 +363,56 @@ public class EaseChatFragment extends EaseBaseFragment {
             EMClient.getInstance().chatroomManager().leaveChatRoom(toChatUsername);
         }
     }
+
+    // ------------------- implements EMMessageListener ----------------------
+    @Override
+    public void onMessageReceived(List<EMMessage> messages) {
+        for (EMMessage message : messages) {
+            String username = null;
+            // group message
+            if (message.getChatType() == EMMessage.ChatType.GroupChat || message.getChatType() == EMMessage.ChatType.ChatRoom) {
+                username = message.getTo();
+            } else {
+                // single chat message
+                username = message.getFrom();
+            }
+
+            // if the message is for current conversation
+            if (username.equals(toChatUsername) || message.getTo().equals(toChatUsername) || message.conversationId().equals(toChatUsername)) {
+                refreshSelectLast();
+                EaseUI.getInstance().getNotifier().vibrateAndPlayTone(message);
+                messageList.getConversation().markMessageAsRead(message.getMsgId());
+            } else {
+                EaseUI.getInstance().getNotifier().onNewMsg(message);
+            }
+        }
+    }
+
+    @Override
+    public void onCmdMessageReceived(List<EMMessage> messages) {
+
+    }
+
+    @Override
+    public void onMessageRead(List<EMMessage> messages) {
+        refresh();
+    }
+
+    @Override
+    public void onMessageDelivered(List<EMMessage> messages) {
+        refresh();
+    }
+
+    @Override
+    public void onMessageRecalled(List<EMMessage> messages) {
+        refresh();
+    }
+
+    @Override
+    public void onMessageChanged(EMMessage message, Object change) {
+        refresh();
+    }
+    // ------------------- implements EMMessageListener end -------------------
 
     public void onBackPressed() {
         if (inputMenu.onBackPressed()) {
@@ -557,7 +608,7 @@ public class EaseChatFragment extends EaseBaseFragment {
     }
 
     protected EMConversation getConversition() {
-        return messageList.getConversition();
+        return messageList.getConversation();
     }
 
     protected void refresh() {

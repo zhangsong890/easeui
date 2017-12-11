@@ -3,6 +3,7 @@ package com.hyphenate.easeui.widget.chatrow;
 import android.widget.BaseAdapter;
 
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.easeui.widget.chatrow2.BasePresenter;
 import com.hyphenate.easeui.widget.presenter.EaseChatRowPresenter;
 
 /**
@@ -21,12 +22,12 @@ public interface EaseCustomChatRowProvider {
      * 获取chatrow type，必须大于0, 从1开始有序排列
      * @return
      */
-    int getCustomChatRowType(EMMessage message);
+    int getItemViewType(EMMessage message);
     
     /**
      * 根据给定message返回chat row
      * @return
      */
-    EaseChatRowPresenter getCustomChatRow(EMMessage message, int position, BaseAdapter adapter);
+    BasePresenter createPresenterByViewType(int viewType);
     
 }

@@ -284,7 +284,7 @@ public class EaseChatInputMenu extends LinearLayout {
                     emojiconMenu.setVisibility(View.GONE);
 
                     if (listener != null) {
-                        listener.onMenuShown(MENU_EXTEND);
+                        listener.onMenuShow(MENU_EXTEND);
                     }
                 }
             }, 50);
@@ -294,7 +294,7 @@ public class EaseChatInputMenu extends LinearLayout {
                 chatExtendMenu.setVisibility(View.VISIBLE);
 
                 if (listener != null) {
-                    listener.onMenuShown(MENU_EXTEND);
+                    listener.onMenuShow(MENU_EXTEND);
                 }
             } else {// chatExtendMenu is showing, so dismiss the chatExtendMenu.
                 chatExtendMenuContainer.setVisibility(View.GONE);
@@ -316,7 +316,7 @@ public class EaseChatInputMenu extends LinearLayout {
                     emojiconMenu.setVisibility(View.VISIBLE);
 
                     if (listener != null) {
-                        listener.onMenuShown(MENU_EMOJICON);
+                        listener.onMenuShow(MENU_EMOJICON);
                     }
                 }
             }, 50);
@@ -329,7 +329,7 @@ public class EaseChatInputMenu extends LinearLayout {
                 emojiconMenu.setVisibility(View.VISIBLE);
 
                 if (listener != null) {
-                    listener.onMenuShown(MENU_EMOJICON);
+                    listener.onMenuShow(MENU_EMOJICON);
                 }
             }
         }
@@ -378,7 +378,7 @@ public class EaseChatInputMenu extends LinearLayout {
         /**
          * when the EaseChatInputMenu status changed.
          */
-        void onMenuShown(@InputMenu int menu);
+        void onMenuShow(@InputMenu int menu);
 
         /**
          * when send message button pressed
@@ -411,7 +411,7 @@ public class EaseChatInputMenu extends LinearLayout {
             public void onChange(boolean isShow, int keyboardHeight) {
                 if (isShow) {
                     if (listener != null) {
-                        listener.onMenuShown(MENU_KEYBOARD);
+                        listener.onMenuShow(MENU_KEYBOARD);
                     }
                 }
             }

@@ -51,7 +51,7 @@ public class EaseChatMessageList extends RelativeLayout{
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.chat_swipe_layout);
         listView = (ListView) findViewById(R.id.list);
     }
-    
+
     /**
      * init widget
      * @param toChatUsername
@@ -61,17 +61,17 @@ public class EaseChatMessageList extends RelativeLayout{
     public void init(String toChatUsername, int chatType, EaseCustomChatRowProvider customChatRowProvider) {
         this.chatType = chatType;
         this.toChatUsername = toChatUsername;
-        
+
         conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername, EaseCommonUtils.getConversationType(chatType), true);
         messageAdapter = new EaseMessageAdapter(context, toChatUsername, chatType, listView);
         messageAdapter.setItemStyle(itemStyle);
         messageAdapter.setCustomChatRowProvider(customChatRowProvider);
         // set message adapter
         listView.setAdapter(messageAdapter);
-        
+
         refreshSelectLast();
     }
-    
+
     protected void parseStyle(Context context, AttributeSet attrs) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EaseChatMessageList);
         EaseMessageListItemStyle.Builder builder = new EaseMessageListItemStyle.Builder();
@@ -93,7 +93,7 @@ public class EaseChatMessageList extends RelativeLayout{
             messageAdapter.refresh();
         }
     }
-    
+
     /**
      * refresh and jump to the last
      */
@@ -102,7 +102,7 @@ public class EaseChatMessageList extends RelativeLayout{
             messageAdapter.refreshSelectLast();
         }
     }
-    
+
     /**
      * refresh and jump to the position
      * @param position
@@ -115,12 +115,12 @@ public class EaseChatMessageList extends RelativeLayout{
 
 	public ListView getListView() {
 		return listView;
-	} 
+	}
 
 	public SwipeRefreshLayout getSwipeRefreshLayout(){
 	    return swipeRefreshLayout;
 	}
-	
+
 	public EMMessage getItem(int position){
 	    return messageAdapter.getItem(position);
 	}
@@ -146,7 +146,7 @@ public class EaseChatMessageList extends RelativeLayout{
 	    void onUserAvatarClick(String username);
 	    void onUserAvatarLongClick(String username);
 	}
-	
+
 	/**
 	 * set click listener
 	 * @param listener
@@ -156,7 +156,7 @@ public class EaseChatMessageList extends RelativeLayout{
 //            messageAdapter.setItemClickListener(listener);
         }
 	}
-	
+
 	/**
 	 * set chat row provider
 	 * @param rowProvider

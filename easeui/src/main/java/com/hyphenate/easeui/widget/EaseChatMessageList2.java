@@ -11,11 +11,9 @@ import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.adapter.EaseChatAdapter;
 import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
@@ -32,7 +30,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class EaseChatMessageList2 extends RelativeLayout implements EMMessageListener {
+public class EaseChatMessageList2 extends RelativeLayout {
     protected static final String TAG = "EaseChatMessageList";
 
     protected DefaultRecyclerView recyclerView;
@@ -47,7 +45,7 @@ public class EaseChatMessageList2 extends RelativeLayout implements EMMessageLis
     private ExecutorService fetchQueue;
     private boolean isRoaming = false;
     protected boolean haveMoreData = true;
-    protected int pagesize = 20;
+    protected int pageSize = 20;
 
     private Handler handler = new Handler();
 
@@ -71,54 +69,6 @@ public class EaseChatMessageList2 extends RelativeLayout implements EMMessageLis
         recyclerView.setOnTouchListener(l);
     }
 
-    // implement methods in EMMessageListener
-    @Override
-    public void onMessageReceived(List<EMMessage> messages) {
-        for (EMMessage message : messages) {
-            String username = null;
-            // group message
-            if (message.getChatType() == EMMessage.ChatType.GroupChat || message.getChatType() == EMMessage.ChatType.ChatRoom) {
-                username = message.getTo();
-            } else {
-                // single chat message
-                username = message.getFrom();
-            }
-
-            // if the message is for current conversation
-            if (username.equals(toChatUsername) || message.getTo().equals(toChatUsername) || message.conversationId().equals(toChatUsername)) {
-                refreshSelectLast();
-                EaseUI.getInstance().getNotifier().vibrateAndPlayTone(message);
-                conversation.markMessageAsRead(message.getMsgId());
-            } else {
-                EaseUI.getInstance().getNotifier().onNewMsg(message);
-            }
-        }
-    }
-
-    @Override
-    public void onCmdMessageReceived(List<EMMessage> messages) {
-    }
-
-    @Override
-    public void onMessageRead(List<EMMessage> messages) {
-        refresh();
-    }
-
-    @Override
-    public void onMessageDelivered(List<EMMessage> messages) {
-        refresh();
-    }
-
-    @Override
-    public void onMessageRecalled(List<EMMessage> messages) {
-        refresh();
-    }
-
-    @Override
-    public void onMessageChanged(EMMessage emMessage, Object change) {
-        refresh();
-    }
-
     /**
      * init widget
      *
@@ -132,8 +82,8 @@ public class EaseChatMessageList2 extends RelativeLayout implements EMMessageLis
 
         chatAdapter = new EaseChatAdapter(getContext(), loadedMessages);
         // TODO
-//        chatAdapter.setItemStyle(itemStyle);
-//        messageAdapter.setCustomChatRowProvider(customChatRowProvider);
+        chatAdapter.setItemStyle(itemStyle);
+        chatAdapter.setCustomChatRowProvider(customChatRowProvider);
         // set message adapter
         recyclerView.setAdapter(chatAdapter);
 
@@ -149,12 +99,12 @@ public class EaseChatMessageList2 extends RelativeLayout implements EMMessageLis
         if (!isRoaming) {
             final List<EMMessage> msgs = conversation.getAllMessages();
             int msgCount = msgs != null ? msgs.size() : 0;
-            if (msgCount < conversation.getAllMsgCount() && msgCount < pagesize) {
+            if (msgCount < conversation.getAllMsgCount() && msgCount < pageSize) {
                 String msgId = null;
                 if (msgs != null && msgs.size() > 0) {
                     msgId = msgs.get(0).getMsgId();
                 }
-                conversation.loadMoreMsgFromDB(msgId, pagesize - msgCount);
+                conversation.loadMoreMsgFromDB(msgId, pageSize - msgCount);
             }
             refreshSelectLast();
         } else {
@@ -163,15 +113,15 @@ public class EaseChatMessageList2 extends RelativeLayout implements EMMessageLis
                 public void run() {
                     try {
                         EMClient.getInstance().chatManager().fetchHistoryMessages(
-                                toChatUsername, EaseCommonUtils.getConversationType(chatType), pagesize, "");
+                                toChatUsername, EaseCommonUtils.getConversationType(chatType), pageSize, "");
                         final List<EMMessage> msgs = conversation.getAllMessages();
                         int msgCount = msgs != null ? msgs.size() : 0;
-                        if (msgCount < conversation.getAllMsgCount() && msgCount < pagesize) {
+                        if (msgCount < conversation.getAllMsgCount() && msgCount < pageSize) {
                             String msgId = null;
                             if (msgs != null && msgs.size() > 0) {
                                 msgId = msgs.get(0).getMsgId();
                             }
-                            conversation.loadMoreMsgFromDB(msgId, pagesize - msgCount);
+                            conversation.loadMoreMsgFromDB(msgId, pageSize - msgCount);
                         }
                         refreshSelectLast();
                     } catch (HyphenateException e) {
@@ -182,7 +132,7 @@ public class EaseChatMessageList2 extends RelativeLayout implements EMMessageLis
         }
     }
 
-    public EMConversation getConversition() {
+    public EMConversation getConversation() {
         return conversation;
     }
 
@@ -271,12 +221,6 @@ public class EaseChatMessageList2 extends RelativeLayout implements EMMessageLis
         });
     }
 
-    private void loadAndNotify() {
-        loadedMessages.clear();
-        loadedMessages.addAll(conversation.getAllMessages());
-        chatAdapter.notifyDataSetChanged();
-    }
-
     protected void parseStyle(Context context, AttributeSet attrs) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EaseChatMessageList);
         EaseMessageListItemStyle.Builder builder = new EaseMessageListItemStyle.Builder();
@@ -311,12 +255,18 @@ public class EaseChatMessageList2 extends RelativeLayout implements EMMessageLis
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
+    private void loadAndNotify() {
+        loadedMessages.clear();
+        loadedMessages.addAll(conversation.getAllMessages());
+        chatAdapter.notifyDataSetChanged();
+    }
+
     private synchronized void loadMoreLocalMessage() {
         if (haveMoreData) {
             List<EMMessage> messages;
             try {
                 messages = conversation.loadMoreMsgFromDB(conversation.getAllMessages().size() == 0 ? "" : conversation.getAllMessages().get(0).getMsgId(),
-                        pagesize);
+                        pageSize);
             } catch (Exception e1) {
                 recyclerView.finishLoading();
                 return;
@@ -324,7 +274,7 @@ public class EaseChatMessageList2 extends RelativeLayout implements EMMessageLis
             Log.i(TAG, "loadMoreLocalMessage: " + messages.size());
             if (messages.size() > 0) {
                 refreshSeekTo(messages.size() - 1);
-                if (messages.size() != pagesize) {
+                if (messages.size() != pageSize) {
                     haveMoreData = false;
                 }
             } else {
@@ -353,7 +303,7 @@ public class EaseChatMessageList2 extends RelativeLayout implements EMMessageLis
                     try {
                         List<EMMessage> messages = conversation.getAllMessages();
                         EMClient.getInstance().chatManager().fetchHistoryMessages(
-                                toChatUsername, EaseCommonUtils.getConversationType(chatType), pagesize,
+                                toChatUsername, EaseCommonUtils.getConversationType(chatType), pageSize,
                                 (messages != null && messages.size() > 0) ? messages.get(0).getMsgId() : "");
                     } catch (HyphenateException e) {
                         e.printStackTrace();
