@@ -7,13 +7,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMMessage;
 
 /**
  * Created by zhangsong on 17-12-1.
  */
 
-public abstract class BaseSendChatRow extends BaseChatRow {
+public abstract class BaseSendChatRow extends DefaultChatRow {
     protected ImageView statusView;
     protected TextView ackView;
     protected TextView deliveredView;

@@ -9,8 +9,8 @@ import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.ui.EaseShowBigImageActivity;
-import com.hyphenate.easeui.widget.chatrow2.BaseChatRow;
 import com.hyphenate.easeui.widget.chatrow2.BaseSendPresenter;
+import com.hyphenate.easeui.widget.chatrow2.DefaultChatRow;
 
 import java.io.File;
 
@@ -26,7 +26,7 @@ public class ImageSendPresenter extends BaseSendPresenter {
     }
 
     @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
+    protected DefaultChatRow onCreateChatRow(Context context) {
         return new ImageSendChatRow(context);
     }
 

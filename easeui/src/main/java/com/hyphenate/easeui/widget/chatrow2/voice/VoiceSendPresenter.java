@@ -7,8 +7,8 @@ import android.os.AsyncTask;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMVoiceMessageBody;
-import com.hyphenate.easeui.widget.chatrow2.BaseChatRow;
 import com.hyphenate.easeui.widget.chatrow2.BaseSendPresenter;
+import com.hyphenate.easeui.widget.chatrow2.DefaultChatRow;
 
 import java.io.File;
 
@@ -27,7 +27,7 @@ public class VoiceSendPresenter extends BaseSendPresenter {
     }
 
     @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
+    protected DefaultChatRow onCreateChatRow(Context context) {
         return new VoiceSendChatRow(context);
     }
 

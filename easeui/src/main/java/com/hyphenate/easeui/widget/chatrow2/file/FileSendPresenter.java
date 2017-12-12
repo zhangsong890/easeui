@@ -7,8 +7,8 @@ import android.content.Intent;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMNormalFileMessageBody;
 import com.hyphenate.easeui.ui.EaseShowNormalFileActivity;
-import com.hyphenate.easeui.widget.chatrow2.BaseChatRow;
 import com.hyphenate.easeui.widget.chatrow2.BaseSendPresenter;
+import com.hyphenate.easeui.widget.chatrow2.DefaultChatRow;
 import com.hyphenate.util.FileUtils;
 
 import java.io.File;
@@ -25,7 +25,7 @@ public class FileSendPresenter extends BaseSendPresenter {
     }
 
     @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
+    protected DefaultChatRow onCreateChatRow(Context context) {
         return new FileSendChatRow(context);
     }
 

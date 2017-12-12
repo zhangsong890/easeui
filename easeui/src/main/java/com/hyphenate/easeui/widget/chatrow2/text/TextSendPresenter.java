@@ -3,8 +3,8 @@ package com.hyphenate.easeui.widget.chatrow2.text;
 import android.content.Context;
 
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.easeui.widget.chatrow2.BaseChatRow;
 import com.hyphenate.easeui.widget.chatrow2.BaseSendPresenter;
+import com.hyphenate.easeui.widget.chatrow2.DefaultChatRow;
 
 /**
  * Created by zhangsong on 17-12-1.
@@ -16,7 +16,7 @@ public class TextSendPresenter extends BaseSendPresenter {
     }
 
     @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
+    protected DefaultChatRow onCreateChatRow(Context context) {
         return new TextSendChatRow(context);
     }
 

@@ -49,6 +49,7 @@ public abstract class BaseChatRow implements View.OnAttachStateChangeListener {
     private View contentView;
 
     private Context context;
+
     /**
      * This view to show the message time, it will show every per 30s.
      */
@@ -67,6 +68,14 @@ public abstract class BaseChatRow implements View.OnAttachStateChangeListener {
         this.context = context;
         initExecutor();
         inflateView();
+        initBaseViews(contentView);
+        onViewInflate(contentView);
+    }
+
+    public BaseChatRow(Context context, @LayoutRes int layoutId) {
+        this.context = context;
+        initExecutor();
+        inflateView(layoutId);
         initBaseViews(contentView);
         onViewInflate(contentView);
     }
@@ -132,11 +141,11 @@ public abstract class BaseChatRow implements View.OnAttachStateChangeListener {
         return contentView;
     }
 
-    protected Context getContext() {
+    public Context getContext() {
         return context;
     }
 
-    protected void runOnUiThread(Runnable runnable) {
+    public void runOnUiThread(Runnable runnable) {
         uiThreadExecutor.post(runnable);
     }
 
@@ -175,6 +184,14 @@ public abstract class BaseChatRow implements View.OnAttachStateChangeListener {
 
     private void inflateView() {
         contentView = LayoutInflater.from(getContext()).inflate(getLayoutId(), null);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        contentView.setLayoutParams(params);
+        contentView.addOnAttachStateChangeListener(this);
+    }
+
+    private void inflateView(@LayoutRes int layoutId) {
+        contentView = LayoutInflater.from(getContext()).inflate(layoutId, null);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         contentView.setLayoutParams(params);

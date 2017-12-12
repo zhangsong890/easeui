@@ -3,7 +3,7 @@ package com.hyphenate.easeui.widget.chatrow2.bigexpression;
 import android.content.Context;
 
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.easeui.widget.chatrow2.BaseChatRow;
+import com.hyphenate.easeui.widget.chatrow2.DefaultChatRow;
 import com.hyphenate.easeui.widget.chatrow2.text.TextReceivePresenter;
 
 /**
@@ -18,7 +18,7 @@ public class BigExpressionReceivePresenter extends TextReceivePresenter {
     }
 
     @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
+    protected DefaultChatRow onCreateChatRow(Context context) {
         return new BigExpressionReceiveChatRow(context);
     }
 

@@ -6,8 +6,8 @@ import android.content.Intent;
 import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.ui.EaseBaiduMapActivity;
-import com.hyphenate.easeui.widget.chatrow2.BaseChatRow;
 import com.hyphenate.easeui.widget.chatrow2.BaseReceivePresenter;
+import com.hyphenate.easeui.widget.chatrow2.DefaultChatRow;
 
 /**
  * Created by zhangsong on 17-12-5.
@@ -21,7 +21,7 @@ public class LocationReceivePresenter extends BaseReceivePresenter {
     }
 
     @Override
-    protected BaseChatRow onCreateChatRow(Context context) {
+    protected DefaultChatRow onCreateChatRow(Context context) {
         return new LocationReceiveChatRow(context);
     }
 
