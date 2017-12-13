@@ -10,13 +10,13 @@ import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.domain.EaseEmojicon;
-import com.hyphenate.easeui.widget.chatrow2.text.TextSendChatRow;
+import com.hyphenate.easeui.widget.chatrow2.BaseSendChatRow;
 
 /**
  * Created by zhangsong on 17-12-5.
  */
 
-public class BigExpressionSendChatRow extends TextSendChatRow {
+public class BigExpressionSendChatRow extends BaseSendChatRow {
     private static final String TAG = "BigExpressionSendChatRo";
 
     private ImageView imageView;
@@ -38,6 +38,7 @@ public class BigExpressionSendChatRow extends TextSendChatRow {
 
     @Override
     protected void onViewSetup(EMMessage message) {
+        super.onViewSetup(message);
         String emojIconId = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_EXPRESSION_ID, null);
         EaseEmojicon emojIcon = null;
         if (EaseUI.getInstance().getEmojiconInfoProvider() != null) {
@@ -52,5 +53,9 @@ public class BigExpressionSendChatRow extends TextSendChatRow {
                 imageView.setImageResource(R.drawable.ease_default_expression);
             }
         }
+    }
+
+    @Override
+    protected void onViewUpdate(EMMessage message) {
     }
 }

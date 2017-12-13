@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.support.v4.os.AsyncTaskCompat;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMFileMessageBody;
@@ -14,7 +15,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.model.EaseImageCache;
 import com.hyphenate.easeui.utils.EaseImageUtils;
-import com.hyphenate.easeui.widget.chatrow2.file.FileSendChatRow;
+import com.hyphenate.easeui.widget.chatrow2.BaseSendChatRow;
 
 import java.io.File;
 
@@ -22,10 +23,11 @@ import java.io.File;
  * Created by zhangsong on 17-12-5.
  */
 
-public class ImageSendChatRow extends FileSendChatRow {
+public class ImageSendChatRow extends BaseSendChatRow {
     private static final String TAG = "ImageSendChatRow";
 
     protected ImageView imageView;
+    protected TextView percentageView;
 
     private EMImageMessageBody imgBody;
 
@@ -42,10 +44,12 @@ public class ImageSendChatRow extends FileSendChatRow {
     protected void onViewInflate(View v) {
         super.onViewInflate(v);
         imageView = (ImageView) v.findViewById(R.id.image);
+        percentageView = (TextView) v.findViewById(R.id.percentage);
     }
 
     @Override
     protected void onViewSetup(EMMessage message) {
+        super.onViewSetup(message);
         imgBody = (EMImageMessageBody) message.getBody();
         String filePath = imgBody.getLocalUrl();
         String thumbPath = EaseImageUtils.getThumbnailImagePath(imgBody.getLocalUrl());
@@ -55,7 +59,29 @@ public class ImageSendChatRow extends FileSendChatRow {
     @Override
     protected void onViewUpdate(EMMessage message) {
         if (EMClient.getInstance().getOptions().getAutodownloadThumbnail()) {
-            super.onViewUpdate(message);
+            switch (message.status()) {
+                case CREATE:
+                    progressBar.setVisibility(View.VISIBLE);
+                    percentageView.setVisibility(View.INVISIBLE);
+                    statusView.setVisibility(View.INVISIBLE);
+                    break;
+                case INPROGRESS:
+                    progressBar.setVisibility(View.VISIBLE);
+                    percentageView.setVisibility(View.VISIBLE);
+                    percentageView.setText(message.progress() + "%");
+                    statusView.setVisibility(View.INVISIBLE);
+                    break;
+                case FAIL:
+                    progressBar.setVisibility(View.INVISIBLE);
+                    percentageView.setVisibility(View.INVISIBLE);
+                    statusView.setVisibility(View.VISIBLE);
+                    break;
+                case SUCCESS:
+                    progressBar.setVisibility(View.INVISIBLE);
+                    percentageView.setVisibility(View.INVISIBLE);
+                    statusView.setVisibility(View.INVISIBLE);
+                    break;
+            }
         } else {
             if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING ||
                     imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING ||

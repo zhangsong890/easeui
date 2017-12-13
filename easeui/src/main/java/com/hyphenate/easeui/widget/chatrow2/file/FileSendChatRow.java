@@ -42,6 +42,7 @@ public class FileSendChatRow extends BaseSendChatRow {
 
     @Override
     protected void onViewSetup(EMMessage message) {
+        super.onViewSetup(message);
         EMNormalFileMessageBody fileMessageBody = (EMNormalFileMessageBody) message.getBody();
         fileNameView.setText(fileMessageBody.getFileName());
         fileSizeView.setText(TextFormater.getDataSize(fileMessageBody.getFileSize()));

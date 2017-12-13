@@ -24,9 +24,4 @@ public abstract class BaseReceivePresenter extends ChatRowPresenter {
     @Override
     public final void onResendClick(EMMessage message) {
     }
-
-    @Override
-    protected void ackMessage(EMMessage message) {
-        super.ackMessage(message);
-    }
 }

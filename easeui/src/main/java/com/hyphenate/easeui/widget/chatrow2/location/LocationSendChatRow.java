@@ -35,6 +35,7 @@ public class LocationSendChatRow extends BaseSendChatRow {
 
     @Override
     protected void onViewSetup(EMMessage message) {
+        super.onViewSetup(message);
         EMLocationMessageBody locBody = (EMLocationMessageBody) message.getBody();
         locationView.setText(locBody.getAddress());
     }

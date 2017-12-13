@@ -203,24 +203,26 @@ public abstract class BaseChatRow implements View.OnAttachStateChangeListener {
         userAvatarView = (ImageView) v.findViewById(com.hyphenate.easeui.R.id.iv_userhead);
         bubbleLayout = v.findViewById(com.hyphenate.easeui.R.id.bubble);
 
-        bubbleLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (itemClickListener != null && itemClickListener.onBubbleClick(message))
-                    return;
+        if (bubbleLayout != null) {
+            bubbleLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (itemClickListener != null && itemClickListener.onBubbleClick(message))
+                        return;
 
-                itemActionListener.onBubbleClick(message);
-            }
-        });
+                    itemActionListener.onBubbleClick(message);
+                }
+            });
 
-        bubbleLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (itemClickListener != null)
-                    itemClickListener.onBubbleLongClick(message);
-                return true;
-            }
-        });
+            bubbleLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (itemClickListener != null)
+                        itemClickListener.onBubbleLongClick(message);
+                    return true;
+                }
+            });
+        }
     }
 
     private void initExecutor() {
@@ -228,11 +230,13 @@ public abstract class BaseChatRow implements View.OnAttachStateChangeListener {
     }
 
     private void setupBaseView(EMMessage message, boolean showTimeStamp) {
-        if (showTimeStamp) {
-            timeStampView.setVisibility(View.VISIBLE);
-            timeStampView.setText(DateUtils.getTimestampString(new Date(message.getMsgTime())));
-        } else {
-            timeStampView.setVisibility(View.GONE);
+        if (timeStampView != null) {
+            if (showTimeStamp) {
+                timeStampView.setVisibility(View.VISIBLE);
+                timeStampView.setText(DateUtils.getTimestampString(new Date(message.getMsgTime())));
+            } else {
+                timeStampView.setVisibility(View.GONE);
+            }
         }
     }
 }

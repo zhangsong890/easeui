@@ -183,39 +183,60 @@ public class EaseChatMessageList2 extends RelativeLayout {
     }
 
     public void scrollToLast() {
-        recyclerView.scrollToPosition(loadedMessages.size() - 1);
+        scrollToPosition(loadedMessages.size() - 1);
     }
 
     public void scrollToPosition(int position) {
         recyclerView.scrollToPosition(position);
     }
 
-    public void refresh() {
+    public void notifyMessageSend() {
         handler.post(new Runnable() {
             @Override
             public void run() {
+                loadedMessages.clear();
+                loadedMessages.addAll(conversation.getAllMessages());
+                chatAdapter.notifyItemInserted(loadedMessages.size());
+                scrollToLast();
+            }
+        });
+    }
+
+    public void refresh() {
+        Log.i(TAG, "refresh: ");
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                /**
+                 * If the RecyclerView already scrolled to the bottom, scroll to the bottom after
+                 * refresh again. otherwise, keep the current scroll position.
+                 */
+                boolean isOnBottom = !recyclerView.canScrollVertically(SCROLL_AXIS_VERTICAL);
                 loadAndNotify();
+                if (isOnBottom) {
+                    scrollToLast();
+                }
             }
         });
     }
 
     public void refreshSelectLast() {
+        Log.i(TAG, "refresh: ");
         handler.post(new Runnable() {
             @Override
             public void run() {
                 loadAndNotify();
-
                 recyclerView.scrollToPosition(loadedMessages.size() - 1);
             }
         });
     }
 
     public void refreshSeekTo(final int position) {
+        Log.i(TAG, "refresh: ");
         handler.post(new Runnable() {
             @Override
             public void run() {
                 loadAndNotify();
-
                 recyclerView.scrollToPosition(position);
             }
         });

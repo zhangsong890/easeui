@@ -14,7 +14,7 @@ import com.hyphenate.chat.EMVideoMessageBody;
 import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.model.EaseImageCache;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
-import com.hyphenate.easeui.widget.chatrow2.file.FileSendChatRow;
+import com.hyphenate.easeui.widget.chatrow2.BaseSendChatRow;
 import com.hyphenate.util.DateUtils;
 import com.hyphenate.util.ImageUtils;
 import com.hyphenate.util.TextFormater;
@@ -25,12 +25,13 @@ import java.io.File;
  * Created by zhangsong on 17-12-5.
  */
 
-public class VideoSendChatRow extends FileSendChatRow {
+public class VideoSendChatRow extends BaseSendChatRow {
     private static final String TAG = "VideoSendChatRow";
 
     private ImageView imageView;
     private TextView sizeView;
     private TextView timeLengthView;
+    private TextView percentageView;
 
     public VideoSendChatRow(Context context) {
         super(context);
@@ -47,10 +48,12 @@ public class VideoSendChatRow extends FileSendChatRow {
         imageView = ((ImageView) v.findViewById(R.id.chatting_content_iv));
         sizeView = (TextView) v.findViewById(R.id.chatting_size_iv);
         timeLengthView = (TextView) v.findViewById(R.id.chatting_length_iv);
+        percentageView = (TextView) v.findViewById(R.id.percentage);
     }
 
     @Override
     protected void onViewSetup(EMMessage message) {
+        super.onViewSetup(message);
         EMVideoMessageBody videoBody = (EMVideoMessageBody) message.getBody();
         String localThumb = videoBody.getLocalThumb();
 
@@ -83,7 +86,6 @@ public class VideoSendChatRow extends FileSendChatRow {
 
     @Override
     protected void onViewUpdate(EMMessage message) {
-        super.onViewUpdate(message);
     }
 
     /**

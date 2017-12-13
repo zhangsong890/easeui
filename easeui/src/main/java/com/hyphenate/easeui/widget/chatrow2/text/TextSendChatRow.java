@@ -2,7 +2,6 @@ package com.hyphenate.easeui.widget.chatrow2.text;
 
 import android.content.Context;
 import android.text.Spannable;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -38,6 +37,7 @@ public class TextSendChatRow extends BaseSendChatRow {
 
     @Override
     protected void onViewSetup(EMMessage message) {
+        super.onViewSetup(message);
         EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
         Spannable span = EaseSmileUtils.getSmiledText(getContext(), txtBody.getMessage());
         // 设置内容

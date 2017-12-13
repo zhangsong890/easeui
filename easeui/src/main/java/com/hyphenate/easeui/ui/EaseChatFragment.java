@@ -604,7 +604,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         //Add to conversation
         EMClient.getInstance().chatManager().saveMessage(message);
         //refresh ui
-        refreshSelectLast();
+//        refreshSelectLast();
+        messageList.notifyMessageSend();
     }
 
     protected EMConversation getConversition() {
