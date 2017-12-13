@@ -61,24 +61,6 @@ public class VoiceSendChatRow extends BaseSendChatRow {
         }
     }
 
-    @Override
-    protected void onViewUpdate(EMMessage message) {
-        switch (message.status()) {
-            case CREATE:
-                progressBar.setVisibility(View.VISIBLE);
-                break;
-            case INPROGRESS:
-                progressBar.setVisibility(View.VISIBLE);
-                break;
-            case FAIL:
-                progressBar.setVisibility(View.INVISIBLE);
-                break;
-            case SUCCESS:
-                progressBar.setVisibility(View.INVISIBLE);
-                break;
-        }
-    }
-
     public void startVoicePlayAnimation() {
         if (message.direct() == EMMessage.Direct.RECEIVE) {
             voiceImageView.setImageResource(R.anim.voice_from_icon);

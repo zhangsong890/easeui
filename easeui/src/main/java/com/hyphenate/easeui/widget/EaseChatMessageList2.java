@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -47,7 +48,7 @@ public class EaseChatMessageList2 extends RelativeLayout {
     protected boolean haveMoreData = true;
     protected int pageSize = 20;
 
-    private Handler handler = new Handler();
+    private Handler uiExecutor;
 
     public EaseChatMessageList2(Context context, AttributeSet attrs, int defStyle) {
         this(context, attrs);
@@ -190,21 +191,52 @@ public class EaseChatMessageList2 extends RelativeLayout {
         recyclerView.scrollToPosition(position);
     }
 
-    public void notifyMessageSend() {
-        handler.post(new Runnable() {
+    public void notifyMessageInserted(final EMMessage... messages) {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 loadedMessages.clear();
                 loadedMessages.addAll(conversation.getAllMessages());
-                chatAdapter.notifyItemInserted(loadedMessages.size());
+                for (EMMessage msg : messages) {
+                    int position = getMessagePosition(msg) + recyclerView.getHeaderCount();
+                    chatAdapter.notifyItemInserted(position);
+                }
                 scrollToLast();
+            }
+        });
+    }
+
+    public void notifyMessageUpdate(final EMMessage... messages) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loadedMessages.clear();
+                loadedMessages.addAll(conversation.getAllMessages());
+                for (EMMessage msg : messages) {
+                    int position = getMessagePosition(msg) + recyclerView.getHeaderCount();
+                    chatAdapter.notifyItemChanged(position);
+                }
+            }
+        });
+    }
+
+    public void notifyMessageRemoved(final EMMessage... messages) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loadedMessages.clear();
+                loadedMessages.addAll(conversation.getAllMessages());
+                for (EMMessage msg : messages) {
+                    int position = getMessagePosition(msg) + recyclerView.getHeaderCount();
+                    chatAdapter.notifyItemRemoved(position);
+                }
             }
         });
     }
 
     public void refresh() {
         Log.i(TAG, "refresh: ");
-        handler.post(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 /**
@@ -222,7 +254,7 @@ public class EaseChatMessageList2 extends RelativeLayout {
 
     public void refreshSelectLast() {
         Log.i(TAG, "refresh: ");
-        handler.post(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 loadAndNotify();
@@ -233,7 +265,7 @@ public class EaseChatMessageList2 extends RelativeLayout {
 
     public void refreshSeekTo(final int position) {
         Log.i(TAG, "refresh: ");
-        handler.post(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 loadAndNotify();
@@ -255,13 +287,15 @@ public class EaseChatMessageList2 extends RelativeLayout {
     }
 
     private void init(Context context) {
+        uiExecutor = new Handler(Looper.getMainLooper());
+
         LayoutInflater.from(context).inflate(R.layout.ease_chat_message_list2, this);
         recyclerView = (DefaultRecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHeaderView(new ProgressHeaderView(getContext()), Progress.BallSpinFadeLoader);
         recyclerView.setHeaderListener(new AbstractHeaderView.HeaderListener() {
             @Override
             public void onLoading() {
-                handler.postDelayed(new Runnable() {
+                uiExecutor.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if (!isRoaming) {
@@ -280,6 +314,16 @@ public class EaseChatMessageList2 extends RelativeLayout {
         loadedMessages.clear();
         loadedMessages.addAll(conversation.getAllMessages());
         chatAdapter.notifyDataSetChanged();
+    }
+
+    private int getMessagePosition(EMMessage message) {
+        if (message == null) return -1;
+        for (int i = loadedMessages.size() - 1; i > -1; i--) {
+            if (message.getMsgId().equals(loadedMessages.get(i).getMsgId())) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private synchronized void loadMoreLocalMessage() {
@@ -329,7 +373,7 @@ public class EaseChatMessageList2 extends RelativeLayout {
                     } catch (HyphenateException e) {
                         e.printStackTrace();
                     } finally {
-                        handler.post(new Runnable() {
+                        runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 loadMoreLocalMessage();
@@ -339,5 +383,9 @@ public class EaseChatMessageList2 extends RelativeLayout {
                 }
             });
         }
+    }
+
+    private void runOnUiThread(Runnable r) {
+        uiExecutor.post(r);
     }
 }

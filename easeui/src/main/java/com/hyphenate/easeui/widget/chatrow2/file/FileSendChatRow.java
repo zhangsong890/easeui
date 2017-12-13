@@ -50,27 +50,16 @@ public class FileSendChatRow extends BaseSendChatRow {
 
     @Override
     protected void onViewUpdate(EMMessage message) {
+        super.onViewUpdate(message);
         switch (message.status()) {
             case CREATE:
-                progressBar.setVisibility(View.VISIBLE);
-                percentageView.setVisibility(View.INVISIBLE);
-                statusView.setVisibility(View.INVISIBLE);
-                break;
-            case SUCCESS:
-                progressBar.setVisibility(View.INVISIBLE);
-                percentageView.setVisibility(View.INVISIBLE);
-                statusView.setVisibility(View.INVISIBLE);
-                break;
             case FAIL:
-                progressBar.setVisibility(View.INVISIBLE);
+            case SUCCESS:
                 percentageView.setVisibility(View.INVISIBLE);
-                statusView.setVisibility(View.VISIBLE);
                 break;
             case INPROGRESS:
-                progressBar.setVisibility(View.VISIBLE);
                 percentageView.setVisibility(View.VISIBLE);
                 percentageView.setText(message.progress() + "%");
-                statusView.setVisibility(View.INVISIBLE);
                 break;
         }
     }

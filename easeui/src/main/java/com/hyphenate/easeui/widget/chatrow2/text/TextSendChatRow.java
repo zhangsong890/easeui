@@ -43,26 +43,4 @@ public class TextSendChatRow extends BaseSendChatRow {
         // 设置内容
         contentView.setText(span, TextView.BufferType.SPANNABLE);
     }
-
-    @Override
-    protected void onViewUpdate(EMMessage message) {
-        switch (message.status()) {
-            case CREATE:
-                progressBar.setVisibility(View.VISIBLE);
-                statusView.setVisibility(View.GONE);
-                break;
-            case SUCCESS:
-                progressBar.setVisibility(View.GONE);
-                statusView.setVisibility(View.GONE);
-                break;
-            case FAIL:
-                progressBar.setVisibility(View.GONE);
-                statusView.setVisibility(View.VISIBLE);
-                break;
-            case INPROGRESS:
-                progressBar.setVisibility(View.VISIBLE);
-                statusView.setVisibility(View.GONE);
-                break;
-        }
-    }
 }

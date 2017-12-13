@@ -85,4 +85,34 @@ public abstract class BaseSendChatRow extends DefaultChatRow {
             }
         }
     }
+
+    @Override
+    protected void onViewUpdate(EMMessage message) {
+        switch (message.status()) {
+            case CREATE:
+                if (progressBar != null)
+                    progressBar.setVisibility(View.VISIBLE);
+                if (statusView != null)
+                    statusView.setVisibility(View.INVISIBLE);
+                break;
+            case SUCCESS:
+                if (progressBar != null)
+                    progressBar.setVisibility(View.INVISIBLE);
+                if (statusView != null)
+                    statusView.setVisibility(View.INVISIBLE);
+                break;
+            case FAIL:
+                if (progressBar != null)
+                    progressBar.setVisibility(View.INVISIBLE);
+                if (statusView != null)
+                    statusView.setVisibility(View.VISIBLE);
+                break;
+            case INPROGRESS:
+                if (progressBar != null)
+                    progressBar.setVisibility(View.VISIBLE);
+                if (statusView != null)
+                    statusView.setVisibility(View.INVISIBLE);
+                break;
+        }
+    }
 }

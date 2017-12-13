@@ -84,10 +84,6 @@ public class VideoSendChatRow extends BaseSendChatRow {
         }
     }
 
-    @Override
-    protected void onViewUpdate(EMMessage message) {
-    }
-
     /**
      * show video thumbnails
      *

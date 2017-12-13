@@ -39,26 +39,4 @@ public class LocationSendChatRow extends BaseSendChatRow {
         EMLocationMessageBody locBody = (EMLocationMessageBody) message.getBody();
         locationView.setText(locBody.getAddress());
     }
-
-    @Override
-    protected void onViewUpdate(EMMessage message) {
-        switch (message.status()) {
-            case CREATE:
-                progressBar.setVisibility(View.VISIBLE);
-                statusView.setVisibility(View.GONE);
-                break;
-            case SUCCESS:
-                progressBar.setVisibility(View.GONE);
-                statusView.setVisibility(View.GONE);
-                break;
-            case FAIL:
-                progressBar.setVisibility(View.GONE);
-                statusView.setVisibility(View.VISIBLE);
-                break;
-            case INPROGRESS:
-                progressBar.setVisibility(View.VISIBLE);
-                statusView.setVisibility(View.GONE);
-                break;
-        }
-    }
 }

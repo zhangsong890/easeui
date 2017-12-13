@@ -54,8 +54,4 @@ public class BigExpressionSendChatRow extends BaseSendChatRow {
             }
         }
     }
-
-    @Override
-    protected void onViewUpdate(EMMessage message) {
-    }
 }

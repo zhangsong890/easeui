@@ -395,22 +395,23 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
     @Override
     public void onMessageRead(List<EMMessage> messages) {
-        refresh();
+        Log.i(TAG, "onMessageRead: " + messages.size());
+        notifyMessageUpdate(messages.toArray(new EMMessage[0]));
     }
 
     @Override
     public void onMessageDelivered(List<EMMessage> messages) {
-        refresh();
+        notifyMessageUpdate(messages.toArray(new EMMessage[0]));
     }
 
     @Override
     public void onMessageRecalled(List<EMMessage> messages) {
-        refresh();
+        notifyMessageUpdate(messages.toArray(new EMMessage[0]));
     }
 
     @Override
-    public void onMessageChanged(EMMessage message, Object change) {
-        refresh();
+    public void onMessageChanged(final EMMessage message, Object change) {
+        notifyMessageUpdate(message);
     }
     // ------------------- implements EMMessageListener end -------------------
 
@@ -604,12 +605,23 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         //Add to conversation
         EMClient.getInstance().chatManager().saveMessage(message);
         //refresh ui
-//        refreshSelectLast();
-        messageList.notifyMessageSend();
+        messageList.notifyMessageInserted();
     }
 
-    protected EMConversation getConversition() {
+    protected EMConversation getConversation() {
         return messageList.getConversation();
+    }
+
+    protected void notifyMessageInserted(EMMessage... messages) {
+        messageList.notifyMessageInserted(messages);
+    }
+
+    protected void notifyMessageUpdate(EMMessage... messages) {
+        messageList.notifyMessageUpdate(messages);
+    }
+
+    protected void notifyMessageRemoved(EMMessage... messages) {
+        messageList.notifyMessageRemoved(messages);
     }
 
     protected void refresh() {

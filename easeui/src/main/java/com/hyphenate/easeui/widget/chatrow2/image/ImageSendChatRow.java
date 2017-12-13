@@ -59,27 +59,16 @@ public class ImageSendChatRow extends BaseSendChatRow {
     @Override
     protected void onViewUpdate(EMMessage message) {
         if (EMClient.getInstance().getOptions().getAutodownloadThumbnail()) {
+            super.onViewUpdate(message);
             switch (message.status()) {
                 case CREATE:
-                    progressBar.setVisibility(View.VISIBLE);
+                case FAIL:
+                case SUCCESS:
                     percentageView.setVisibility(View.INVISIBLE);
-                    statusView.setVisibility(View.INVISIBLE);
                     break;
                 case INPROGRESS:
-                    progressBar.setVisibility(View.VISIBLE);
                     percentageView.setVisibility(View.VISIBLE);
                     percentageView.setText(message.progress() + "%");
-                    statusView.setVisibility(View.INVISIBLE);
-                    break;
-                case FAIL:
-                    progressBar.setVisibility(View.INVISIBLE);
-                    percentageView.setVisibility(View.INVISIBLE);
-                    statusView.setVisibility(View.VISIBLE);
-                    break;
-                case SUCCESS:
-                    progressBar.setVisibility(View.INVISIBLE);
-                    percentageView.setVisibility(View.INVISIBLE);
-                    statusView.setVisibility(View.INVISIBLE);
                     break;
             }
         } else {
