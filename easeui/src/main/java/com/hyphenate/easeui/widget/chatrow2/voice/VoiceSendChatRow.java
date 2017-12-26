@@ -43,6 +43,7 @@ public class VoiceSendChatRow extends BaseSendChatRow {
 
     @Override
     protected void onViewSetup(EMMessage message) {
+        super.onViewSetup(message);
         EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) message.getBody();
         int len = voiceBody.getLength();
         if (len > 0) {
